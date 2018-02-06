@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mapwize</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="location_permission">Mapwize heeft uw toestemming nodig om uw positie op de kaart weer te geven</string>
+    <string name="language_selection">Kies een taal</string>
+    <string name="universe_selection">Kies een universum</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Annuleren</string>
+
+    <string name="credits">Credits</string>
+
+    <string name="search_venue">Naar een plek zoeken…</string>
+    <string name="search_in_venue">Zoeken in %1$s…</string>
+
+    <string name="floor_placeholder">Verdieping %1$s</string>
+
+    <string name="choose_from">Kies een uitgangspunt</string>
+    <string name="choose_to">Kies een bestemming</string>
+    <string name="current_position">Huidige standpunt</string>
+
+    <string name="access_key">Toegangsleutel</string>
+    <string name="access_key_enter">Toegangsleutel invoegen</string>
+    <string name="close">Afsluiten</string>
+    <string name="about_mapwize">About Mapwize</string>
+    <string name="contact_us">Contact met ons opnemen</string>
+    <string name="access_granted">Nieuwe toegangssleutel toegevoegd</string>
+    <string name="access_invalid">Toegangssleutel ongeldig</string>
+    <string name="entering_in_venue">Toegang tot %1$s…</string>
+    <string name="no_results">Geen resultaat</string>
+    <string name="direction_not_found">Geen bestemming gevonden</string>
+    <string name="coordinates">Coördinaten</string>
+    <string name="dir_min">%1$d min</string>
+</resources>

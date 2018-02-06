@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/access_key"
+            android:icon="@drawable/ic_lock_outline_black_24dp"
+            android:title="@string/access_key"/>
+
+        <item
+            android:id="@+id/about_mapwize"
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:title="@string/about_mapwize"/>
+
+        <item
+            android:id="@+id/contact_us"
+            android:icon="@drawable/ic_email_black_24dp"
+            android:title="@string/contact_us"/>
+
+    </group>
+
+</menu>

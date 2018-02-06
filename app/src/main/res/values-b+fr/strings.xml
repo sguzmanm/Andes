@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mapwize</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="location_permission">Mapwize a besoin de votre autorisation pour afficher votre position sur la carte</string>
+    <string name="language_selection">Choisissez une langue</string>
+    <string name="universe_selection">Choisissez un univers</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="credits">Credits</string>
+
+    <string name="search_venue">Rechercher un lieu…</string>
+    <string name="search_in_venue">Rechercher dans %1$s…</string>
+
+    <string name="floor_placeholder">Etage %1$s</string>
+
+    <string name="choose_from">Choisir un point de départ</string>
+    <string name="choose_to">Choisir une destination</string>
+    <string name="current_position">Position actuelle</string>
+
+    <string name="access_key">Clé d\'accès</string>
+    <string name="access_key_enter">Entrez une clé d\'accès</string>
+    <string name="close">Fermer</string>
+    <string name="about_mapwize">About Mapwize</string>
+    <string name="contact_us">Contactez nous</string>
+    <string name="access_granted">De nouveaux accès ont été débloqués</string>
+    <string name="access_invalid">Clé d\'accès invalide</string>
+    <string name="entering_in_venue">Entré dans %1$s…</string>
+    <string name="no_results">Aucun résultat</string>
+    <string name="direction_not_found">Aucune direction n\'a été trouvée</string>
+    <string name="coordinates">Coordonnées</string>
+    <string name="dir_min">%1$d min</string>
+</resources>
