@@ -9,7 +9,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "io.mapwize.app"
         minSdkVersion 21
@@ -47,5 +47,9 @@ dependencies {
     implementation 'com.github.IndoorLocation:indoor-location-android:1.0.4'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'io.mapwize.indoormaps:MapwizeForMapbox:1.0.3'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
 
 }
+
+apply plugin: 'com.google.gms.google-services'
+

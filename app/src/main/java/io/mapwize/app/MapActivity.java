@@ -92,7 +92,7 @@ import io.mapwize.mapwizeformapbox.model.Venue;
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchResultsListAdapter.Listener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchResultsListAdapter.Listener{
 
     private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 0;
 
