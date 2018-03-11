@@ -2,15 +2,20 @@ package io.mapwize.app;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import io.indoorlocation.core.IndoorLocation;
 import io.indoorlocation.core.IndoorLocationProvider;
 import io.indoorlocation.core.IndoorLocationProviderListener;
 import io.indoorlocation.gps.GPSIndoorLocationProvider;
+import io.indoorlocation.providerselector.SelectorIndoorLocationProvider;
+import io.indoorlocation.socketlocationprovider.SocketIndoorLocationProvider;
 
 public class MapwizeLocationProvider extends IndoorLocationProvider implements IndoorLocationProviderListener{
 
     private GPSIndoorLocationProvider mGpsIndoorLocationProvider;
+    private SocketIndoorLocationProvider socketIndoorLocationProvider;
+    private SelectorIndoorLocationProvider ILSelector;
     private boolean mStarted;
     private boolean mLocationLocked;
     private Handler mHandler;
@@ -18,7 +23,13 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     MapwizeLocationProvider(Context context) {
         super();
         mGpsIndoorLocationProvider = new GPSIndoorLocationProvider(context);
-        mGpsIndoorLocationProvider.addListener(this);
+        socketIndoorLocationProvider = new SocketIndoorLocationProvider(context, "http://192.168.128.11:3003");
+        socketIndoorLocationProvider.addListener(this);
+        ILSelector = new SelectorIndoorLocationProvider(60*1000);
+        ILSelector.addIndoorLocationProvider(mGpsIndoorLocationProvider);
+        ILSelector.addIndoorLocationProvider(socketIndoorLocationProvider);
+        ILSelector.addListener(this);
+
     }
 
     @Override
@@ -29,7 +40,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void start() {
         if (!mStarted) {
-            mGpsIndoorLocationProvider.start();
+            socketIndoorLocationProvider.start();
             mStarted = true;
         }
     }
@@ -37,7 +48,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void stop() {
         if (mStarted) {
-            mGpsIndoorLocationProvider.stop();
+            socketIndoorLocationProvider.stop();
             mStarted = false;
         }
     }
@@ -48,6 +59,8 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     }
 
     void defineLocation(IndoorLocation indoorLocation) {
+        Log.d("MY TAG","MA1");
+
         if (mHandler == null) {
             mHandler = new Handler();
         }
@@ -86,6 +99,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
 
     @Override
     public void onIndoorLocationChange(IndoorLocation indoorLocation) {
+        Log.d("MY TAG","MA2");
         if (!mLocationLocked) {
             this.dispatchIndoorLocationChange(indoorLocation);
         }

@@ -11,21 +11,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,12 +34,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +50,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -69,7 +67,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.indoorlocation.core.IndoorLocation;
-
 import io.mapwize.mapwizeformapbox.FollowUserMode;
 import io.mapwize.mapwizeformapbox.MapOptions;
 import io.mapwize.mapwizeformapbox.MapwizePlugin;
@@ -152,6 +149,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, "pk.eyJ1IjoibWFwd2l6ZSIsImEiOiJjamNhYnN6MjAwNW5pMnZvMnYzYTFpcWVxIn0.veTCqUipGXCw8NwM2ep1Xg");
         setContentView(R.layout.activity_map);
@@ -231,6 +229,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void setupSearchResult(String query, SearchMode mode) {
+        Log.d("MY TAG",2+"");
         if (mode == SearchMode.DEFAULT) {
             if (mapwizePlugin.getVenue() == null) {
                 searchVenues(query);
@@ -249,6 +248,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void searchInVenue(String query) {
+        Log.d("MY TAG",3+"");
         if (query.length() > 0) {
             SearchParams params = new SearchParams.Builder()
                     .setObjectClass(new String[]{"place", "placeList"})
@@ -309,6 +309,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void searchFrom(String query) {
+        Log.d("MY TAG",4+"");
         if (query.length() > 0) {
             SearchParams params = new SearchParams.Builder()
                     .setObjectClass(new String[]{"place"})
@@ -372,6 +373,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void searchVenues(String query) {
+        Log.d("MY TAG",5+"");
 
         SearchParams params = new SearchParams.Builder()
                 .setObjectClass(new String[]{"venue"})
@@ -418,6 +420,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void findViews() {
+        Log.d("MY TAG",6+"");
         directionHeaderMainLayout = findViewById(R.id.direction_header_main_layout);
         directionHeaderFromTextView = findViewById(R.id.direction_header_from_text);
         directionHeaderToTextView = findViewById(R.id.direction_header_to_text);
@@ -450,6 +453,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void initMapWithOptions(final MapOptions opts) {
+        Log.d("MY TAG",7+"");
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mMap) {
@@ -509,6 +513,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void setupLeftActionButton(SearchMode mode) {
+        Log.d("MY TAG",8+"");
+
         if (mode == SearchMode.NONE) {
             leftActionButton.setImageResource(R.drawable.ic_dehaze_black_24dp);
             leftActionButton.setOnClickListener(new View.OnClickListener() {
@@ -552,7 +558,7 @@ public class MapActivity extends AppCompatActivity
                     PlaceList placeList = (PlaceList) object;
                     selectContent(placeList);
                 }
-                mapwizePlugin.setFollowUserMode(FollowUserMode.NONE);
+                mapwizePlugin.setFollowUserMode(FollowUserMode.FOLLOW_USER);
             }
             if (currentSearchMode == SearchMode.FROM_DIRECTION) {
                 if (object instanceof String) {
@@ -602,6 +608,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void initInterfaceComponents() {
+        Log.d("MY TAG",9+"");
         navigationView.setNavigationItemSelectedListener(this);
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
@@ -745,6 +752,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void initMapwizePluginListeners() {
+        Log.d("MY TAG",9+"");
+
         mapwizePlugin.setOnMapClickListener(new MapwizePlugin.OnMapClickListener() {
             @Override
             public void onMapClick(LatLngFloor latLngFloor) {
@@ -939,6 +948,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void swapDirection() {
+        Log.d("MY TAG",9+"");
+
         DirectionPoint tmp = fromDirectionPoint;
         fromDirectionPoint = toDirectionPoint;
         toDirectionPoint = tmp;
@@ -958,6 +969,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void setupSearchDirectionUI() {
+        Log.d("MY TAG",10+"");
+
         mapwizePlugin.setTopPadding((int)convertDpToPixel(TOP_PADDING_DIRECTION,MapActivity.this));
         inDirectionMode = true;
         searchBarLayout.setVisibility(View.GONE);
@@ -1056,7 +1069,19 @@ public class MapActivity extends AppCompatActivity
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
+                            int i=0;
                             if (mCurrentVenue != null) {
+                                for(Route r:object.getRoutes())
+                                {
+                                    Log.d("ROUTE ",r.getTimeToEnd()+" "+r.getFloor());
+                                    for(LatLng latLng:r.getPath())
+                                    {
+                                        LatLngFloor latLngFloor=new LatLngFloor(latLng.getLatitude(),latLng.getLongitude(),r.getFloor());
+                                        mapwizePlugin.addMarker(latLngFloor);
+                                        Log.d("ROUTE "+i,latLng.getLatitude()+" "+latLng.getLongitude());
+                                    }
+                                    i++;
+                                }
                                 directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(object, fromDirectionPoint, toDirectionPoint));
                             }
                             startDirection(fromDirectionPoint, toDirectionPoint, object, true);
@@ -1085,6 +1110,7 @@ public class MapActivity extends AppCompatActivity
     private List<Marker> contentSelectionMarkers = new ArrayList<>();
     private MapwizeObject selectedContent;
     private void selectContent(MapwizeObject content) {
+        Log.d("MY TAG","Entra "+selectedContent+" "+content);
         if (selectedContent != null) {
             if (selectedContent instanceof Place) {
                 mapwizePlugin.removePromotedPlace(((Place) selectedContent));
@@ -1195,6 +1221,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void showCredits() {
+        Log.d("MY TAG",11+"");
+
         drawer.closeDrawer(GravityCompat.START);
         WebView webView = new WebView(this);
         webView.setWebViewClient(new WebViewClient() {
@@ -1294,6 +1322,8 @@ public class MapActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d("MY TAG",12+"");
+
         int id = item.getItemId();
         if (id == R.id.access_key) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapActivity.this);
@@ -1383,6 +1413,8 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+        Log.d("MY TAG",13+"");
+
         super.onStart();
         if (mapView != null) {
             mapView.onStart();
@@ -1391,6 +1423,8 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onResume() {
+        Log.d("MY TAG",14+"");
+
         super.onResume();
         if (mapView != null) {
             mapView.onResume();
@@ -1402,6 +1436,8 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onPause() {
+        Log.d("MY TAG",15+"");
+
         super.onPause();
         mapView.onPause();
         if (mapwizePlugin != null) {
@@ -1458,12 +1494,16 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void setupLocationProvider() {
+        Log.d("MY TAG",16+"");
+
         mapwizeLocationProvider = new MapwizeLocationProvider(MapActivity.this);
         mapwizePlugin.setLocationProvider(mapwizeLocationProvider);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("MY TAG",17+"");
+
         if (requestCode == 0) {
             if (resultCode == Activity.RESULT_OK) {
                 String result = data.getStringExtra("url");
@@ -1492,6 +1532,8 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void handleParsedUrl(final ParsedUrlObject parsedUrlObject) {
+        Log.d("MY TAG",18+"");
+
         if (parsedUrlObject.getAccessKey() != null) {
             Api.getAccess(parsedUrlObject.getAccessKey(), new ApiCallback<Boolean>() {
                 @Override
