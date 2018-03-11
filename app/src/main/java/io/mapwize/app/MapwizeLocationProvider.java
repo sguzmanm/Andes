@@ -40,7 +40,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void start() {
         if (!mStarted) {
-            socketIndoorLocationProvider.start();
+            ILSelector.start();
             mStarted = true;
         }
     }
@@ -48,7 +48,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void stop() {
         if (mStarted) {
-            socketIndoorLocationProvider.stop();
+            ILSelector.stop();
             mStarted = false;
         }
     }
