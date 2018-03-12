@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     color: "#FFFFFF"
   }
 });

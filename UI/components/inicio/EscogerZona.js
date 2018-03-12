@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 class EscogerZona extends React.Component{
   render(){
     return (
-      <Screen>
+      <Screen style={styles.container}>
         <Button
           title="Uniandes"
           onPress={() => this.props.navigation.navigate('AppNav')}

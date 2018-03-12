@@ -7,11 +7,11 @@ const styles = StyleSheet.create({
 
   },
   nombre: {
-    fontSize: 24,
+    fontSize: 16,
     textAlign: "left"
   },
   precio: {
-    fontSize: 20,
+    fontSize: 12,
     textAlign: "right"
   }
 });
@@ -33,7 +33,6 @@ class Producto extends React.Component {
       </TouchableOpacity>
     );
   }
-
 }
 
 export default Producto;

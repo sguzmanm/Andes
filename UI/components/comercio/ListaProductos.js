@@ -42,7 +42,7 @@ class ListaProductos extends React.Component {
           keyExtractor={elemento => elemento.id}
           style={{ paddingHorizontal: 24 }}
           ItemSeparatorComponent={() => <View style={{ height: 2, width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />}
-          renderItem={( item ) => {return(
+          renderItem={({ item }) => {return(
             <Producto
               producto={item}
             />
