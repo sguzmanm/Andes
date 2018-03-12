@@ -34,11 +34,15 @@ captures/
 
 # IntelliJ
 *.iml
+.idea/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/dictionaries
 .idea/libraries
+
+#Vscode
+.vscode/*
 
 # Keystore files
 # Uncomment the following line if you do not want to check your keystore files in.
