@@ -50,6 +50,7 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'io.mapwize.indoormaps:MapwizeForMapbox:1.0.3'
+    implementation 'com.facebook.react:react-native:+' // From node_modules
 
 }
 
