@@ -27,25 +27,23 @@ const styles = StyleSheet.create({
 });
 
 class MapaPrincipal extends React.Component {
-  constructor(){
-    super();
-    this.state = {
-      puntoSeleccionado : {
-        Latitud: null,
-        Longitud: null
-      }
-    };
-  }
+
+  static navigationOptions = {
+    drawerLabel: 'Navegación',
+    drawerIcon: ({ tintColor }) => <Icon name="directions-run" color={tintColor} />
+  };
 
   render() {
+    const { params } = this.props.navigation.state;
+    let destino = undefined;
+    if(params)
+      destino = params.destino
     return(
       <Screen>
         <Header
           leftIcon="menu"
           leftIconAction={() => this.props.navigation.navigate('DrawerToggle')}
-          title="Menú principal"
-          rightIcon="info"
-          rightIconAction={() => this.setState({ puntoSeleccionado: { Latitud: 2, Longitud: 1} })}
+          title="Navegación"
         />
         <Icon
           name="search"
@@ -55,6 +53,13 @@ class MapaPrincipal extends React.Component {
           size={32}
           onPress={() => this.props.navigation.navigate("Buscar")}
         />
+        {destino ?
+          <View>
+            <Text>Me estoy dirigiendo hacia: {destino.nombre}</Text>
+            <Text>Que queda en: [{destino.ubicacion.latitud}, {destino.ubicacion.longitud}]</Text>
+            <Text>En el piso: {destino.ubicacion.piso}</Text> 
+          </View>
+          :<View></View>}
       </Screen>
     );
   }
