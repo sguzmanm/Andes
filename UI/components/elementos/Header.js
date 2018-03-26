@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { LinearGradient } from 'expo'
+import LinearGradient from 'react-native-linear-gradient';
 
 const styles = StyleSheet.create({
   container: {
