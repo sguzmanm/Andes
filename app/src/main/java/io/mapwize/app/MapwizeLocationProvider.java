@@ -18,17 +18,12 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     private SelectorIndoorLocationProvider ILSelector;
     private boolean mStarted;
     private boolean mLocationLocked;
+    private boolean accessPointsRunning;
     private Handler mHandler;
 
     MapwizeLocationProvider(Context context) {
         super();
         mGpsIndoorLocationProvider = new GPSIndoorLocationProvider(context);
-        socketIndoorLocationProvider = new SocketIndoorLocationProvider(context, "http://192.168.128.11:3003");
-        socketIndoorLocationProvider.addListener(this);
-        ILSelector = new SelectorIndoorLocationProvider(60*1000);
-        ILSelector.addIndoorLocationProvider(mGpsIndoorLocationProvider);
-        ILSelector.addIndoorLocationProvider(socketIndoorLocationProvider);
-        ILSelector.addListener(this);
 
     }
 
@@ -40,7 +35,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void start() {
         if (!mStarted) {
-            ILSelector.start();
+            mGpsIndoorLocationProvider.start();
             mStarted = true;
         }
     }
@@ -48,7 +43,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void stop() {
         if (mStarted) {
-            ILSelector.stop();
+            mGpsIndoorLocationProvider.stop();
             mStarted = false;
         }
     }
@@ -100,8 +95,17 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     @Override
     public void onIndoorLocationChange(IndoorLocation indoorLocation) {
         Log.d("MY TAG","MA2");
-        if (!mLocationLocked) {
-            this.dispatchIndoorLocationChange(indoorLocation);
+        if(!accessPointsRunning)
+        {
+            if (!mLocationLocked) {
+                this.dispatchIndoorLocationChange(indoorLocation);
+            }
         }
+
+    }
+
+    public void setAccessPointsRunning(boolean b)
+    {
+        accessPointsRunning=b;
     }
 }

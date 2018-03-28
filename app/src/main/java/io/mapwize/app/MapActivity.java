@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -61,11 +63,11 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,6 +90,8 @@ import io.mapwize.mapwizeformapbox.model.Route;
 import io.mapwize.mapwizeformapbox.model.Translation;
 import io.mapwize.mapwizeformapbox.model.Universe;
 import io.mapwize.mapwizeformapbox.model.Venue;
+import resources.CustomResult;
+import resources.PixelLocation;
 import resources.Triangulacion;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
@@ -152,9 +156,10 @@ public class MapActivity extends AppCompatActivity
     private MapwizeObject shouldBeSelected;
 
 
+    private HashMap<String, PixelLocation> accessPoints;
     //Do timer activity
     private Timer timer;
-    private TimerTask timerTask = new TimerTask() {
+    private TimerTask timeTAGTAGsk = new TimerTask() {
 
     private boolean inicio=false;
         @Override
@@ -164,22 +169,110 @@ public class MapActivity extends AppCompatActivity
                 inicio=true;
                 Looper.prepare();
             }
-            final Random random = new Random();
-            int i = random.nextInt(2 - 0 + 1) + 0;
-            Log.d("MINUMERO",i+"");
-
-
-
+            HashMap<String,CustomResult> bssid=new HashMap<>();
+            WifiManager wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            List<ScanResult> results=wifiManager.getScanResults();
+            ArrayList<CustomResult> list=new ArrayList<>();
+            String message="No results. Check wireless on";
+            if(results!=null)
+            {
+                final int size=results.size();
+                if(size==0) message="No access points in route";
+                else {
+                    message="";
+                    for(ScanResult sc:results)
+                    {
+                        if(bssid.get(sc.BSSID.substring(0,14))==null)
+                        {
+                            list.add(new CustomResult(sc));
+                            bssid.put(sc.BSSID.substring(0,14),new CustomResult(sc));
+                        }
+                    }
+                    Collections.sort(list);
+                    for(CustomResult sc:list)
+                    {
+                        message+=sc.getScan().BSSID+" "+sc.getScan().SSID+" "+sc.getScan().level+" "+wifiManager.calculateSignalLevel(sc.getScan().level,5)+" "+sc.getScan().frequency+"\n";
+                    }
+                }
+            }
+            Log.d("TAGTAG",message);
+            CustomResult[] indices=new CustomResult[3];
+            int num=0;
+            for(CustomResult sc:list)
+            {
+                if(accessPoints.containsKey(sc.getPreBssid()))
+                {
+                    indices[num]=sc;
+                    num++;
+                    Log.d("TAGTAG",sc.getPreBssid());
+                }
+                if(num>=3)
+                    break;
+            }
             Triangulacion t = new Triangulacion();
             //Posiciones de los routers encontrados en el mapa
-            String[] temp=t.ubicacion(2527,1935,12*39,
-                    2558, 2344, t.dbmAMetros(-53,2462)*39,2005,2344,t.dbmAMetros(-58,2437)*39).split(";");
-            //Crea el marcador con las ubicaciones en latitud y longitud
-            double[] d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
-                    4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
-            System.out.println(d[0]+" "+d[1]);
-            mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0]+Math.random()*0.000001,d[1]+Math.random()*0.000001,7.0,System.currentTimeMillis()));
-            Log.d("MY TAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+            String[]temp;
+            double[]d;
+                temp=t.ubicacion(accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39,
+                        accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39,
+                        accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39).split(";");
+                //Crea el marcador con las ubicaciones en latitud y longitud
+                d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                        4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
+                if(Double.isNaN(d[0])||Double.isNaN(d[1]))
+                {
+                    Log.d("TAGTAG","Error 1");
+                    temp=t.ubicacion(accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39,
+                            accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39,
+                            accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39).split(";");
+                    //Crea el marcador con las ubicaciones en latitud y longitud
+                    d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                            4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
+                    if(Double.isNaN(d[0])||Double.isNaN(d[1]))
+                    {
+
+                            Log.d("TAGTAG","Error 2");
+                            temp=t.ubicacion(accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39,
+                                    accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39,
+                                    accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39).split(";");
+                            //Crea el marcador con las ubicaciones en latitud y longitud
+                            d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                                    4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
+
+                        if(Double.isNaN(d[0])||Double.isNaN(d[1]))
+                        {
+                            Log.d("TAGTAG","Es ilocalizable");
+                            mapwizeLocationProvider.setAccessPointsRunning(false);
+                        }
+                        else
+                        {
+                            Log.d("TAGTAG",d[0]+" "+d[1]);
+                            mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0],d[1],7.0,System.currentTimeMillis()));
+                            Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+                            mapwizeLocationProvider.setAccessPointsRunning(true);
+
+                        }
+                    }
+                    else
+                    {
+                        Log.d("TAGTAG",d[0]+" "+d[1]);
+                        mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0],d[1],mapwizePlugin.getFloor(),System.currentTimeMillis()));
+                        Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+                        mapwizeLocationProvider.setAccessPointsRunning(true);
+
+                    }
+                }
+                else
+                {
+                    Log.d("TAGTAG",d[0]+" "+d[1]);
+                    mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0],d[1],mapwizePlugin.getFloor(),System.currentTimeMillis()));
+                    Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+                    mapwizeLocationProvider.setAccessPointsRunning(true);
+
+                }
+
+
+
 
         }
     };
@@ -189,7 +282,7 @@ public class MapActivity extends AppCompatActivity
             return;
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 2000);
+        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 2000);
     }
 
     public void stop() {
@@ -201,6 +294,11 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
+
+        accessPoints=new HashMap<>();
+        accessPoints.put("30:37:a6:c2:c4",new PixelLocation(2558, 2344));
+        accessPoints.put("d8:24:bd:4f:71",new PixelLocation(2005,2344));
+        accessPoints.put("00:25:45:a3:92",new PixelLocation(2527,1935));
         Mapbox.getInstance(this, "pk.eyJ1Ijoic2d1em1hbm0iLCJhIjoiY2pleXB3aW45MDkxZDJxcDZzY3FnaTh2ZCJ9.B7iUjwcIAXVEmjQx6I3iEA");
         setContentView(R.layout.activity_map);
         findViews();
@@ -1554,7 +1652,6 @@ public class MapActivity extends AppCompatActivity
 
     private void setupLocationProvider() {
         Log.d("MY TAG",16+"");
-
         mapwizeLocationProvider = new MapwizeLocationProvider(MapActivity.this);
         mapwizePlugin.setLocationProvider(mapwizeLocationProvider);
         start();
