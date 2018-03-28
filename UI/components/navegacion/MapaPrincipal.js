@@ -3,6 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import Header from './../elementos/Header';
 import Screen from './../elementos/Screen';
+//Import de componente nativo
+import MapView from './../nativo/MapView';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +25,11 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 4,
     shadowOpacity: 0.25
+  },
+  map: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 
@@ -60,6 +67,7 @@ class MapaPrincipal extends React.Component {
             <Text>En el piso: {destino.ubicacion.piso}</Text> 
           </View>
           :<View></View>}
+          <MapView style={styles.map}/>
       </Screen>
     );
   }
