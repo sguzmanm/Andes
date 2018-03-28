@@ -65,6 +65,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.indoorlocation.core.IndoorLocation;
 import io.mapwize.mapwizeformapbox.FollowUserMode;
@@ -85,6 +88,7 @@ import io.mapwize.mapwizeformapbox.model.Route;
 import io.mapwize.mapwizeformapbox.model.Translation;
 import io.mapwize.mapwizeformapbox.model.Universe;
 import io.mapwize.mapwizeformapbox.model.Venue;
+import resources.Triangulacion;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -147,11 +151,57 @@ public class MapActivity extends AppCompatActivity
     private Venue mCurrentVenue = null;
     private MapwizeObject shouldBeSelected;
 
+
+    //Do timer activity
+    private Timer timer;
+    private TimerTask timerTask = new TimerTask() {
+
+    private boolean inicio=false;
+        @Override
+        public void run() {
+            if(!inicio)
+            {
+                inicio=true;
+                Looper.prepare();
+            }
+            final Random random = new Random();
+            int i = random.nextInt(2 - 0 + 1) + 0;
+            Log.d("MINUMERO",i+"");
+
+
+
+            Triangulacion t = new Triangulacion();
+            //Posiciones de los routers encontrados en el mapa
+            String[] temp=t.ubicacion(2527,1935,12*39,
+                    2558, 2344, t.dbmAMetros(-53,2462)*39,2005,2344,t.dbmAMetros(-58,2437)*39).split(";");
+            //Crea el marcador con las ubicaciones en latitud y longitud
+            double[] d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                    4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
+            System.out.println(d[0]+" "+d[1]);
+            mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0]+Math.random()*0.000001,d[1]+Math.random()*0.000001,7.0,System.currentTimeMillis()));
+            Log.d("MY TAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+
+        }
+    };
+
+    public void start() {
+        if(timer != null) {
+            return;
+        }
+        timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask, 0, 2000);
+    }
+
+    public void stop() {
+        timer.cancel();
+        timer = null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, "pk.eyJ1IjoibWFwd2l6ZSIsImEiOiJjamNhYnN6MjAwNW5pMnZvMnYzYTFpcWVxIn0.veTCqUipGXCw8NwM2ep1Xg");
+        Mapbox.getInstance(this, "pk.eyJ1Ijoic2d1em1hbm0iLCJhIjoiY2pleXB3aW45MDkxZDJxcDZzY3FnaTh2ZCJ9.B7iUjwcIAXVEmjQx6I3iEA");
         setContentView(R.layout.activity_map);
         findViews();
 
@@ -163,6 +213,7 @@ public class MapActivity extends AppCompatActivity
         initMapWithOptions(opts);
 
         MapwizeApplication application = (MapwizeApplication) getApplication();
+
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -1111,9 +1162,13 @@ public class MapActivity extends AppCompatActivity
     private MapwizeObject selectedContent;
     private void selectContent(MapwizeObject content) {
         Log.d("MY TAG","Entra "+selectedContent+" "+content);
+
+
         if (selectedContent != null) {
             if (selectedContent instanceof Place) {
+                Log.d("MY TAG","VA "+selectedContent+" "+content);
                 mapwizePlugin.removePromotedPlace(((Place) selectedContent));
+
             }
             selectedContent = null;
             for (Marker m : contentSelectionMarkers) {
@@ -1122,6 +1177,10 @@ public class MapActivity extends AppCompatActivity
             contentSelectionMarkers.clear();
             mapwizePlugin.removePromotedPlaces(promotedPlaces);
             promotedPlaces.clear();
+            //Código para probar donde se colocan marcadores
+            //contentSelectionMarkers.add(mapwizePlugin.addMarker(new LatLngFloor(-74.064775,4.60255309,7.0)));
+
+            //Marker m =mapwizePlugin.addMarker(new LatLngFloor(4.602553088830576,-74.06477523042022,7.0));
         }
         Translation tr = content.getTranslation(mapwizePlugin.getLanguage());
         if (tr.getTitle().equals("")) {
@@ -1498,6 +1557,7 @@ public class MapActivity extends AppCompatActivity
 
         mapwizeLocationProvider = new MapwizeLocationProvider(MapActivity.this);
         mapwizePlugin.setLocationProvider(mapwizeLocationProvider);
+        start();
     }
 
     @Override

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:label="Mapwize"
@@ -42,6 +43,7 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/MaterialDrawerTheme.Light.TranslucentStatus">
         </activity>
+
 
     </application>
 
