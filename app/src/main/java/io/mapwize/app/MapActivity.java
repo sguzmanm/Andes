@@ -277,6 +277,9 @@ public class MapActivity extends AppCompatActivity
         }
     };
 
+
+
+
     public void start() {
         if(timer != null) {
             return;
@@ -1220,6 +1223,7 @@ public class MapActivity extends AppCompatActivity
                         public void run() {
                             int i=0;
                             if (mCurrentVenue != null) {
+
                                 for(Route r:object.getRoutes())
                                 {
                                     Log.d("ROUTE ",r.getTimeToEnd()+" "+r.getFloor());
