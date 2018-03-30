@@ -60,6 +60,14 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -68,8 +76,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import io.indoorlocation.core.IndoorLocation;
 import io.mapwize.mapwizeformapbox.FollowUserMode;
@@ -81,6 +94,7 @@ import io.mapwize.mapwizeformapbox.api.ApiCallback;
 import io.mapwize.mapwizeformapbox.api.SearchParams;
 import io.mapwize.mapwizeformapbox.model.Direction;
 import io.mapwize.mapwizeformapbox.model.DirectionPoint;
+import io.mapwize.mapwizeformapbox.model.DirectionPointWrapper;
 import io.mapwize.mapwizeformapbox.model.LatLngFloor;
 import io.mapwize.mapwizeformapbox.model.MapwizeObject;
 import io.mapwize.mapwizeformapbox.model.ParsedUrlObject;
@@ -93,6 +107,7 @@ import io.mapwize.mapwizeformapbox.model.Venue;
 import resources.CustomResult;
 import resources.PixelLocation;
 import resources.Triangulacion;
+import resources.*;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -104,6 +119,8 @@ public class MapActivity extends AppCompatActivity
     private final int TOP_PADDING = 80;
     private final int BOTTOM_PADDING = 54;
     private final int TOP_PADDING_DIRECTION = 80;
+
+    private final int NUM_NODOS = 940;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -155,6 +172,9 @@ public class MapActivity extends AppCompatActivity
     private Venue mCurrentVenue = null;
     private MapwizeObject shouldBeSelected;
 
+    private List<Nodo> nodos;
+    private List<List<Arco>> adj;
+
 
     private HashMap<String, PixelLocation> accessPoints;
     //Do timer activity
@@ -162,6 +182,8 @@ public class MapActivity extends AppCompatActivity
     private TimerTask timeTAGTAGsk = new TimerTask() {
 
     private boolean inicio=false;
+
+
         @Override
         public void run() {
             if(!inicio)
@@ -277,8 +299,152 @@ public class MapActivity extends AppCompatActivity
         }
     };
 
+    public void initializeData() throws IOException, ParserConfigurationException, SAXException {
+        nodos = new ArrayList<>(NUM_NODOS);
+        adj = new ArrayList<>(NUM_NODOS);
+        for(int i = 0; i<NUM_NODOS; i++) {
+            adj.add(new ArrayList<Arco>());
+        }
+
+        BufferedReader br = new BufferedReader(new FileReader("sampledata/doc.kml"));
+        String line = null;
+        for(int j = 0; j<26; j++) {
+            br.readLine();
+        }
+
+        while((line = br.readLine()) != null) {
+//	    	JSONObject obj = new JSONObject();
+            Nodo nodo = new Nodo();
+
+            for(int j = 0; j<30; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(4, line.length()-5);
+            nodo.FID = Integer.parseInt(line);
+//	    	obj.put("FID", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(4, line.length()-5);
+            nodo.nombre = line;
+//	    	obj.put("nombre", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(4, line.length()-5);
+            nodo.piso = Integer.parseInt(line);
+//	    	obj.put("piso", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(4, line.length()-5);
+            nodo.bloque = line;
+//	    	obj.put("bloque", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(4, line.length()-5);
+            nodo.area = Double.parseDouble(line.replaceAll(",", "."));
+//	    	obj.put("area", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+//	    	line = line.substring(4, line.length()-5);
+//	    	obj.put("concentrac", line);
+
+            for(int j = 0; j<8; j++) {
+                line = br.readLine();
+            }
+//	    	line = line.substring(4, line.length()-5);
+//	    	obj.put("cap", line);
+
+            for(int j = 0; j<20; j++) {
+                line = br.readLine();
+            }
+            line = line.substring(22, line.length()-14);
+            nodo.coordenadas = line;
+//	    	obj.put("coordenadas", line);
+
+            //siguiente
+            for(int j = 0; j<5; j++) {
+                br.readLine();
+            }
+
+            nodos.add(nodo);
+            //arr.add(obj);
+        }
+//	    theObj.put("nodos",arr);
+//	    System.out.println(theObj);
+//	    try (FileWriter file = new FileWriter("./data/nodos.json")) {
+//			file.write(theObj.toJSONString());
+//			System.out.println("Successfully Copied JSON Object to File...");
+//			System.out.println("\nJSON Object: " + theObj);
+//		}
 
 
+        //------------------------------------------------------------------------------
+        //------------------------------------ARCOS-------------------------------------
+        //------------------------------------------------------------------------------
+
+        File f = new File("sampledata/red-caminos.kml");
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(f);
+        doc.getDocumentElement().normalize();
+        NodeList nl1 = doc.getElementsByTagName("coordinates");
+        NodeList nl2 = doc.getElementsByTagName("description");
+
+        //Tiene primero el origen, luego el destino, y de tercero el peso.
+//		List<Arco> aristas = new ArrayList<>();
+
+        for(int k = 0; k < nl1.getLength(); k++) {
+            String[] coords = nl1.item(k).getTextContent().trim().split(" ");
+
+            String desc = nl2.item(k).getTextContent();
+            String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
+            double length = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
+
+            temp = desc.substring(desc.indexOf("Pendiente") + 20);
+//			double pendiente = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
+
+
+
+            String origen = coords[0];
+            String destino = coords[coords.length-1];
+
+            List<Integer> nodosOrigen = new ArrayList<>();
+            List<Integer> nodosDestino = new ArrayList<>();
+
+            for(Nodo nodo : nodos) {
+                if(nodo.coordenadas.equals(origen)) {
+                    nodosOrigen.add(nodo.FID);
+                }
+                if(nodo.coordenadas.equals(destino)) {
+                    nodosDestino.add(nodo.FID);
+                }
+            }
+
+            if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
+                for(Integer nodo : nodosOrigen) {
+                    for(Integer nodo2 : nodosDestino) {
+                        Arco arco = new Arco();
+                        arco.camino = coords;
+                        arco.length = length;
+                        arco.origen = nodo;
+                        arco.destino = nodo2;
+                        adj.get(nodo).add(arco);
+                        adj.get(nodo2).add(arco);
+                    }
+                }
+
+            }
+        }
+    }
 
     public void start() {
         if(timer != null) {
@@ -1223,7 +1389,6 @@ public class MapActivity extends AppCompatActivity
                         public void run() {
                             int i=0;
                             if (mCurrentVenue != null) {
-
                                 for(Route r:object.getRoutes())
                                 {
                                     Log.d("ROUTE ",r.getTimeToEnd()+" "+r.getFloor());
@@ -1652,6 +1817,117 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    public List<String> getRoute(int from, int to) {
+        double[] dist = new double[NUM_NODOS];
+        boolean[] visitado = new boolean[NUM_NODOS];
+        Arco[] padre = new Arco[NUM_NODOS];
+
+        for(int i = 0; i<NUM_NODOS; i++) {
+            dist[i] = Double.POSITIVE_INFINITY;
+            padre[i] = null;
+        }
+        dist[from] = 0;
+
+        NodoCola nc = new NodoCola();
+        nc.nodo = from;
+        nc.peso = 0;
+
+        PriorityQueue<NodoCola> q = new PriorityQueue<>();
+        q.add(nc);
+
+        while(!q.isEmpty()) {
+            NodoCola nc1 = q.poll();
+            int nodoActual = nc1.nodo;
+            if(visitado[nodoActual]) {
+                continue;
+            }
+            visitado[nodoActual] = true;
+
+            //terminacion
+            if(visitado[to]) {
+                break;
+            }
+
+            for(Arco arco : adj.get(nodoActual)) {
+                int w = arco.origen;
+                if(w == nodoActual) {
+                    w = arco.destino;
+                }
+
+                if(dist[nodoActual]+arco.length<dist[w]) {
+                    dist[w] = dist[nodoActual]+arco.length;
+                    padre[w] = arco;
+                    NodoCola nc2 = new NodoCola();
+                    nc2.nodo = w;
+                    nc2.peso = dist[w];
+                    q.add(nc2);
+                }
+            }
+        }
+
+        //reconstruccion de la ruta
+        List<String> ruta = new ArrayList<>();
+        if(padre[to] != null) {
+            ruta.add(nodos.get(to).coordenadas);
+            Arco padreActual = padre[to];
+            int nodoActual = to;
+
+            while(padreActual!=null) {
+                String[] camino = padreActual.camino;
+                int dest = -1;
+                if(nodoActual == padreActual.origen) {
+                    dest = padreActual.destino;
+                    for(int i = 1; i<camino.length; i++) {
+                        ruta.add(0, camino[i]);
+                    }
+                }
+                else {
+                    dest = padreActual.origen;
+                    for(int i = camino.length-2; i>=0; i--) {
+                        ruta.add(0, camino[i]);
+                    }
+                }
+
+                padreActual = padre[dest];
+                nodoActual = dest;
+            }
+        }
+        return ruta;
+    }
+
+    public Route toRoute(List<String> route) {
+        List<LatLng> list = new ArrayList<>(route.size());
+        for(String s : route) {
+            String[] sLatLng = s.split(",");
+            LatLng latLng = new LatLng(Double.parseDouble(sLatLng[1]),Double.parseDouble(sLatLng[0]));
+            list.add(latLng);
+        }
+        return new Route(0.0,0.0,0.0,false,false,0.0,0.0,null,0.0,"","",list);
+    }
+
+    public void showRoute(int from, int to) {
+        Route r = toRoute(getRoute(from, to));
+        List<Route> list = new ArrayList<>();
+        list.add(r);
+        LatLng llFrom = r.getPath().get(0);
+        LatLng llTo = r.getPath().get(r.getPath().size()-1);
+        DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, "", "", "");
+        DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0, "", "", "");
+        Direction dir = new Direction(dpwFrom, dpwTo, 0.0, 0.0, list, null, null, null);
+
+        directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(dir, fromDirectionPoint, toDirectionPoint));
+        mapwizePlugin.setDirection(dir);
+    }
+
+    public void testInternalRoute() {
+        showRoute(84, 85);
+
+    }
+
+    public void testExternalRoute() {
+        showRoute(28, 190);
     }
 
     private void setupLocationProvider() {
