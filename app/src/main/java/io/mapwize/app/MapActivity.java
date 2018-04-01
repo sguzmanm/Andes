@@ -66,8 +66,10 @@ import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -177,6 +179,9 @@ public class MapActivity extends AppCompatActivity
 
 
     private HashMap<String, PixelLocation> accessPoints;
+
+    private boolean testingRoutes=true;
+    private boolean isExternalTest=false;
     //Do timer activity
     private Timer timer;
     private TimerTask timeTAGTAGsk = new TimerTask() {
@@ -191,6 +196,7 @@ public class MapActivity extends AppCompatActivity
                 inicio=true;
                 Looper.prepare();
             }
+
             HashMap<String,CustomResult> bssid=new HashMap<>();
             WifiManager wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             List<ScanResult> results=wifiManager.getScanResults();
@@ -231,10 +237,29 @@ public class MapActivity extends AppCompatActivity
                 if(num>=3)
                     break;
             }
+            //FAKE ALGORITHM FOR TESTING Uncomment to use
+
+            Triangulacion t = new Triangulacion();
+            System.out.println(t.ubicacion(1620, 1276, 508,524,1277,715,1453,1927,405));
+
+            System.out.println(t.ubicacion(2527,1935,12*39,
+                    2558, 2344, t.dbmAMetros(-53,2462)*39,2005,2344,t.dbmAMetros(-58,2437)*39));
+
+            double[] d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                    4.602854888940370,-74.06432099640370,3168,3223,2393.972155790736,2383.695434192323);
+            System.out.println(d[0]+" "+d[1]);
+            mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0],d[1],7.0,System.currentTimeMillis()));
+            Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+            mapwizeLocationProvider.setAccessPointsRunning(true);
+
+            //REAL ALGORITHM Uncomment to use
+            /*
             Triangulacion t = new Triangulacion();
             //Posiciones de los routers encontrados en el mapa
             String[]temp;
             double[]d;
+            if(num>=3)
+            {
                 temp=t.ubicacion(accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39,
                         accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39,
                         accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39).split(";");
@@ -253,13 +278,13 @@ public class MapActivity extends AppCompatActivity
                     if(Double.isNaN(d[0])||Double.isNaN(d[1]))
                     {
 
-                            Log.d("TAGTAG","Error 2");
-                            temp=t.ubicacion(accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39,
-                                    accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39,
-                                    accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39).split(";");
-                            //Crea el marcador con las ubicaciones en latitud y longitud
-                            d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
-                                    4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
+                        Log.d("TAGTAG","Error 2");
+                        temp=t.ubicacion(accessPoints.get(indices[0].getPreBssid()).getX(),accessPoints.get(indices[0].getPreBssid()).getY(),t.dbmAMetros(indices[0].getScan().level,indices[0].getScan().frequency)*39,
+                                accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39,
+                                accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39).split(";");
+                        //Crea el marcador con las ubicaciones en latitud y longitud
+                        d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
+                                4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
 
                         if(Double.isNaN(d[0])||Double.isNaN(d[1]))
                         {
@@ -292,8 +317,7 @@ public class MapActivity extends AppCompatActivity
                     mapwizeLocationProvider.setAccessPointsRunning(true);
 
                 }
-
-
+            }*/
 
 
         }
@@ -305,145 +329,184 @@ public class MapActivity extends AppCompatActivity
         for(int i = 0; i<NUM_NODOS; i++) {
             adj.add(new ArrayList<Arco>());
         }
+        File file = new File(getCacheDir() + "doc.kml");
+        if (!file.exists()) try {
 
-        BufferedReader br = new BufferedReader(new FileReader("sampledata/doc.kml"));
-        String line = null;
-        for(int j = 0; j<26; j++) {
-            br.readLine();
+            InputStream is = getAssets().open("doc.kml");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(buffer);
+            fos.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        while((line = br.readLine()) != null) {
-//	    	JSONObject obj = new JSONObject();
-            Nodo nodo = new Nodo();
-
-            for(int j = 0; j<30; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(4, line.length()-5);
-            nodo.FID = Integer.parseInt(line);
-//	    	obj.put("FID", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(4, line.length()-5);
-            nodo.nombre = line;
-//	    	obj.put("nombre", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(4, line.length()-5);
-            nodo.piso = Integer.parseInt(line);
-//	    	obj.put("piso", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(4, line.length()-5);
-            nodo.bloque = line;
-//	    	obj.put("bloque", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(4, line.length()-5);
-            nodo.area = Double.parseDouble(line.replaceAll(",", "."));
-//	    	obj.put("area", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("concentrac", line);
-
-            for(int j = 0; j<8; j++) {
-                line = br.readLine();
-            }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("cap", line);
-
-            for(int j = 0; j<20; j++) {
-                line = br.readLine();
-            }
-            line = line.substring(22, line.length()-14);
-            nodo.coordenadas = line;
-//	    	obj.put("coordenadas", line);
-
-            //siguiente
-            for(int j = 0; j<5; j++) {
+        if (file.exists())
+        {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = null;
+            for(int j = 0; j<26; j++) {
                 br.readLine();
             }
 
-            nodos.add(nodo);
-            //arr.add(obj);
+            while((line = br.readLine()) != null) {
+//	    	JSONObject obj = new JSONObject();
+                Nodo nodo = new Nodo();
+
+                for(int j = 0; j<30; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(4, line.length()-5);
+                nodo.FID = Integer.parseInt(line);
+//	    	obj.put("FID", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(4, line.length()-5);
+                nodo.nombre = line;
+//	    	obj.put("nombre", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(4, line.length()-5);
+                nodo.piso = Integer.parseInt(line);
+//	    	obj.put("piso", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(4, line.length()-5);
+                nodo.bloque = line;
+//	    	obj.put("bloque", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(4, line.length()-5);
+                nodo.area = Double.parseDouble(line.replaceAll(",", "."));
+//	    	obj.put("area", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+//	    	line = line.substring(4, line.length()-5);
+//	    	obj.put("concentrac", line);
+
+                for(int j = 0; j<8; j++) {
+                    line = br.readLine();
+                }
+//	    	line = line.substring(4, line.length()-5);
+//	    	obj.put("cap", line);
+
+                for(int j = 0; j<20; j++) {
+                    line = br.readLine();
+                }
+                line = line.substring(22, line.length()-14);
+                nodo.coordenadas = line;
+//	    	obj.put("coordenadas", line);
+
+                //siguiente
+                for(int j = 0; j<5; j++) {
+                    br.readLine();
+                }
+
+                nodos.add(nodo);
+                //arr.add(obj);
+            }
+    //	    theObj.put("nodos",arr);
+    //	    System.out.println(theObj);
+    //	    try (FileWriter file = new FileWriter("./data/nodos.json")) {
+    //			file.write(theObj.toJSONString());
+    //			System.out.println("Successfully Copied JSON Object to File...");
+    //			System.out.println("\nJSON Object: " + theObj);
+    //		}
         }
-//	    theObj.put("nodos",arr);
-//	    System.out.println(theObj);
-//	    try (FileWriter file = new FileWriter("./data/nodos.json")) {
-//			file.write(theObj.toJSONString());
-//			System.out.println("Successfully Copied JSON Object to File...");
-//			System.out.println("\nJSON Object: " + theObj);
-//		}
+
+
 
 
         //------------------------------------------------------------------------------
         //------------------------------------ARCOS-------------------------------------
         //------------------------------------------------------------------------------
 
-        File f = new File("sampledata/red-caminos.kml");
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(f);
-        doc.getDocumentElement().normalize();
-        NodeList nl1 = doc.getElementsByTagName("coordinates");
-        NodeList nl2 = doc.getElementsByTagName("description");
+        File f = new File(getCacheDir()+"red-caminos.kml");
+        if (!f.exists()) try {
 
-        //Tiene primero el origen, luego el destino, y de tercero el peso.
-//		List<Arco> aristas = new ArrayList<>();
+            InputStream is = getAssets().open("red-caminos.kml");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
 
-        for(int k = 0; k < nl1.getLength(); k++) {
-            String[] coords = nl1.item(k).getTextContent().trim().split(" ");
 
-            String desc = nl2.item(k).getTextContent();
-            String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
-            double length = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(buffer);
+            fos.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (f.exists())
+        {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(f);
+            doc.getDocumentElement().normalize();
+            NodeList nl1 = doc.getElementsByTagName("coordinates");
+            NodeList nl2 = doc.getElementsByTagName("description");
 
-            temp = desc.substring(desc.indexOf("Pendiente") + 20);
+            //Tiene primero el origen, luego el destino, y de tercero el peso.
+            //		List<Arco> aristas = new ArrayList<>();
+
+            for(int k = 0; k < nl1.getLength(); k++) {
+                String[] coords = nl1.item(k).getTextContent().trim().split(" ");
+
+                String desc = nl2.item(k).getTextContent();
+                String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
+                double length = Double.parseDouble(temp.substring(1,temp.indexOf("<")).replace(',', '.'));
+
+                temp = desc.substring(desc.indexOf("Pendiente") + 20);
 //			double pendiente = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
 
 
 
-            String origen = coords[0];
-            String destino = coords[coords.length-1];
+                String origen = coords[0];
+                String destino = coords[coords.length-1];
 
-            List<Integer> nodosOrigen = new ArrayList<>();
-            List<Integer> nodosDestino = new ArrayList<>();
+                List<Integer> nodosOrigen = new ArrayList<>();
+                List<Integer> nodosDestino = new ArrayList<>();
 
-            for(Nodo nodo : nodos) {
-                if(nodo.coordenadas.equals(origen)) {
-                    nodosOrigen.add(nodo.FID);
-                }
-                if(nodo.coordenadas.equals(destino)) {
-                    nodosDestino.add(nodo.FID);
-                }
-            }
-
-            if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
-                for(Integer nodo : nodosOrigen) {
-                    for(Integer nodo2 : nodosDestino) {
-                        Arco arco = new Arco();
-                        arco.camino = coords;
-                        arco.length = length;
-                        arco.origen = nodo;
-                        arco.destino = nodo2;
-                        adj.get(nodo).add(arco);
-                        adj.get(nodo2).add(arco);
+                for(Nodo nodo : nodos) {
+                    if(nodo.coordenadas.equals(origen)) {
+                        nodosOrigen.add(nodo.FID);
+                    }
+                    if(nodo.coordenadas.equals(destino)) {
+                        nodosDestino.add(nodo.FID);
                     }
                 }
 
+                if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
+                    for(Integer nodo : nodosOrigen) {
+                        for(Integer nodo2 : nodosDestino) {
+                            Arco arco = new Arco();
+                            arco.camino = coords;
+                            arco.length = length;
+                            arco.origen = nodo;
+                            arco.destino = nodo2;
+                            adj.get(nodo).add(arco);
+                            adj.get(nodo2).add(arco);
+                        }
+                    }
+
+                }
             }
         }
+
     }
 
     public void start() {
@@ -775,6 +838,13 @@ public class MapActivity extends AppCompatActivity
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mMap) {
+                try {
+                    initializeData();
+                }
+                catch(Exception e)
+                {
+                    Log.d("ERROR",e.getMessage(),e);
+                }
                 mapboxMap = mMap;
                 mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, opts);
                 mapwizePlugin.setPreferredLanguage(Locale.getDefault().getLanguage());
@@ -783,6 +853,7 @@ public class MapActivity extends AppCompatActivity
                 initMapwizePluginListeners();
                 requestLocationPermission();
                 setupSearchEditTexts();
+
             }
         });
     }
@@ -1107,7 +1178,7 @@ public class MapActivity extends AppCompatActivity
                 if (directionByVenue.get(venue.getId()) != null) {
                     FullDirectionObject o = directionByVenue.get(venue.getId());
                     setupSearchDirectionUI();
-                    startDirection(o.from, o.to, o.direction, false);
+                    startDirection(o.from, o.to, o.direction, false,null);
                 }
                 else {
                     setupInVenueUI(venue);
@@ -1326,7 +1397,7 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-    private void startDirection(DirectionPoint fromPoint, DirectionPoint toPoint, Direction direction, boolean fitBounds) {
+    private void startDirection(DirectionPoint fromPoint, DirectionPoint toPoint, Direction direction, boolean fitBounds,LatLngBounds latLngBounds) {
 
         if (fitBounds) {
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -1337,9 +1408,23 @@ public class MapActivity extends AppCompatActivity
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 10, 400, 10, 300);
             mapboxMap.easeCamera(cu);
         }
+        if(!isExternalTest && testingRoutes)
+        {
+            testInternalRoute(latLngBounds);
+            isExternalTest=true;
+        }
+        else if (isExternalTest & testingRoutes)
+        {
+            testExternalRoute(latLngBounds);
+            testingRoutes=false;
+        }
 
+       /*
         unselectContent();
+        Log.d("RUTA2",direction.toString());
+        direction=new Direction(direction.getFrom(),direction.getTo(),direction.getDistance(),direction.getTraveltime(),direction.getRoutes(),null,null,null);
         mapwizePlugin.setDirection(direction);
+        Log.d("RUTA2",direction.toString());
 
         if (fromPoint instanceof Place) {
             Place place = (Place)fromPoint;
@@ -1374,8 +1459,7 @@ public class MapActivity extends AppCompatActivity
         directionTime.setText(String.format(timPlaceHolder,time));
         directionDistance.setText(UnitLocale.distanceAsString(direction.getDistance()));
         mapwizePlugin.setBottomPadding(Math.round(convertDpToPixel(BOTTOM_PADDING, this)));
-        directionButton.setVisibility(View.GONE);
-
+        directionButton.setVisibility(View.GONE);*/
     }
 
     private void tryToStartDirection() {
@@ -1383,26 +1467,17 @@ public class MapActivity extends AppCompatActivity
             Api.getDirection(fromDirectionPoint, toDirectionPoint, isAccessible, new ApiCallback<Direction>() {
                 @Override
                 public void onSuccess(final Direction object) {
+                    Log.d("RUTA3",object.toString());
                     Handler uiHandler = new Handler(Looper.getMainLooper());
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
                             int i=0;
                             if (mCurrentVenue != null) {
-                                for(Route r:object.getRoutes())
-                                {
-                                    Log.d("ROUTE ",r.getTimeToEnd()+" "+r.getFloor());
-                                    for(LatLng latLng:r.getPath())
-                                    {
-                                        LatLngFloor latLngFloor=new LatLngFloor(latLng.getLatitude(),latLng.getLongitude(),r.getFloor());
-                                        mapwizePlugin.addMarker(latLngFloor);
-                                        Log.d("ROUTE "+i,latLng.getLatitude()+" "+latLng.getLongitude());
-                                    }
-                                    i++;
-                                }
-                                directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(object, fromDirectionPoint, toDirectionPoint));
+                                directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(object, null, null));
+                                Log.d("RUTA1",mCurrentVenue.getId()+" "+object.toString()+" "+fromDirectionPoint.toString()+" "+toDirectionPoint.toString());
                             }
-                            startDirection(fromDirectionPoint, toDirectionPoint, object, true);
+                            startDirection(fromDirectionPoint, toDirectionPoint, object, true,object.getBounds());
                         }
                     };
                     uiHandler.post(runnable);
@@ -1820,6 +1895,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     public List<String> getRoute(int from, int to) {
+        Log.d("TAG2","Entra");
         double[] dist = new double[NUM_NODOS];
         boolean[] visitado = new boolean[NUM_NODOS];
         Arco[] padre = new Arco[NUM_NODOS];
@@ -1829,14 +1905,12 @@ public class MapActivity extends AppCompatActivity
             padre[i] = null;
         }
         dist[from] = 0;
-
         NodoCola nc = new NodoCola();
         nc.nodo = from;
         nc.peso = 0;
 
         PriorityQueue<NodoCola> q = new PriorityQueue<>();
         q.add(nc);
-
         while(!q.isEmpty()) {
             NodoCola nc1 = q.poll();
             int nodoActual = nc1.nodo;
@@ -1866,7 +1940,6 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         }
-
         //reconstruccion de la ruta
         List<String> ruta = new ArrayList<>();
         if(padre[to] != null) {
@@ -1897,37 +1970,99 @@ public class MapActivity extends AppCompatActivity
         return ruta;
     }
 
-    public Route toRoute(List<String> route) {
+    public Route toRoute(List<String> route,LatLngBounds latLngBounds) {
         List<LatLng> list = new ArrayList<>(route.size());
+        Log.d("TAG2",route.size()+"");
         for(String s : route) {
+            Log.d("TAG2",s);
             String[] sLatLng = s.split(",");
             LatLng latLng = new LatLng(Double.parseDouble(sLatLng[1]),Double.parseDouble(sLatLng[0]));
             list.add(latLng);
         }
-        return new Route(0.0,0.0,0.0,false,false,0.0,0.0,null,0.0,"","",list);
+        return new Route(0.0,0.0,0.0,false,false,0.0,0.0,latLngBounds,0.0,"","",list);
     }
 
-    public void showRoute(int from, int to) {
-        Route r = toRoute(getRoute(from, to));
-        List<Route> list = new ArrayList<>();
-        list.add(r);
-        LatLng llFrom = r.getPath().get(0);
-        LatLng llTo = r.getPath().get(r.getPath().size()-1);
-        DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, "", "", "");
-        DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0, "", "", "");
-        Direction dir = new Direction(dpwFrom, dpwTo, 0.0, 0.0, list, null, null, null);
+    public void showRoute(final int from, final int to, final LatLngBounds latLngBounds) {
 
-        directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(dir, fromDirectionPoint, toDirectionPoint));
-        mapwizePlugin.setDirection(dir);
+
+       /*
+       List<LatLng> lat=new ArrayList<>();
+                lat.add(new LatLng(4.602819464288424,-74.06492784619331,0.0));
+                lat.add(new LatLng(4.602817934672893,-74.06492566238988, 0.0));
+                lat.add(new LatLng(4.602840518562904, -74.06490974128248, 0.0));
+                lat.add(new LatLng(4.602822806236791, -74.06488157808782, 0.0));
+                lat.add(new LatLng(4.602888823577639, -74.06483093089558, 0.0));
+                lat.add(new LatLng(4.602891650369796, -74.06483463943006, 0.0));
+
+                List<LatLngBounds>b=new ArrayList<>();
+                Log.d("TAG2","A");
+                Route r=new Route(0.0,Double.NaN,Double.NaN,true,true,17.0,13.0,latLngBounds,17.0,"","",lat);
+                List<Route> list = new ArrayList<>();
+                list.add(r);
+                LatLng llFrom = r.getPath().get(0);
+                LatLng llTo = r.getPath().get(r.getPath().size()-1);
+                Log.d("TAG2","B");
+
+
+                DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, mCurrentVenue.getId(), "5ab05de59dd371003b82185a", "");
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0,  mCurrentVenue.getId(), "5ab05dc966264600137b2d70", "");
+                Log.d("TAG2","B");
+
+                Direction dir = new Direction(dpwFrom, dpwTo, 17.0, 13.0, list, null, null, null);
+                Log.d("TAG2","B");
+                int i=0;
+        */
+
+
+        Log.d("TAG2","Pone "+from+" "+to+" "+latLngBounds);
+        Handler uiHandler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("TAG2","A");
+                Route r = toRoute(getRoute(from, to),latLngBounds);
+                List<Route> list = new ArrayList<>();
+                list.add(r);
+                LatLng llFrom = r.getPath().get(0);
+                LatLng llTo = r.getPath().get(r.getPath().size()-1);
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, mCurrentVenue.getId(), "5ab05de59dd371003b82185a", "");
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0,  mCurrentVenue.getId(), "5ab05dc966264600137b2d70", "");
+                Log.d("TAG2","B");
+
+                Direction dir = new Direction(dpwFrom, dpwTo, 0.0, 0.0, list, latLngBounds, null, null);
+                Log.d("TAG2","B "+latLngBounds+" "+dir.getBounds());
+
+                Log.d("TAG2","Pone");
+
+                if (mCurrentVenue != null) {
+                    directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(dir, null, null));
+                    Log.d("RUTA1",mCurrentVenue.getId()+" "+dir.toString()+" "+fromDirectionPoint.toString()+" "+toDirectionPoint.toString());
+                }
+                unselectContent();
+                mapwizePlugin.removeMarkers();
+                mapwizePlugin.addMarker(new LatLngFloor(llFrom.getLatitude(),llFrom.getLongitude(),llFrom.getAltitude()));
+                mapwizePlugin.addMarker(new LatLngFloor(llTo.getLatitude(),llTo.getLongitude(),llTo.getAltitude()));
+                mapwizePlugin.setDirection(dir);
+            }
+        };
+        uiHandler.post(runnable);
+
     }
 
-    public void testInternalRoute() {
-        showRoute(84, 85);
+    public void testInternalRoute(LatLngBounds latLngBounds) {
+        Log.d("TAG2","Entra");
+        showRoute(84, 85,latLngBounds);
 
     }
 
-    public void testExternalRoute() {
-        showRoute(28, 190);
+    public void testExternalRoute(LatLngBounds latLngBounds) {
+        showRoute(28, 190,latLngBounds);
     }
 
     private void setupLocationProvider() {
