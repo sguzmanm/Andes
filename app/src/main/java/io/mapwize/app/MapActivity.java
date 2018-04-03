@@ -48,6 +48,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
@@ -106,10 +111,12 @@ import io.mapwize.mapwizeformapbox.model.Route;
 import io.mapwize.mapwizeformapbox.model.Translation;
 import io.mapwize.mapwizeformapbox.model.Universe;
 import io.mapwize.mapwizeformapbox.model.Venue;
+import resources.Arco;
 import resources.CustomResult;
+import resources.Nodo;
+import resources.NodoCola;
 import resources.PixelLocation;
 import resources.Triangulacion;
-import resources.*;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -173,7 +180,15 @@ public class MapActivity extends AppCompatActivity
     private MapwizeLocationProvider mapwizeLocationProvider;
     private Venue mCurrentVenue = null;
     private MapwizeObject shouldBeSelected;
+    //------------------
+    //Firebase
+    //------------------
 
+    private FirebaseFirestore db;
+
+    //------------
+    //Algoritmos propios
+    //------------
     private List<Nodo> nodos;
     private List<List<Arco>> adj;
 
@@ -187,6 +202,8 @@ public class MapActivity extends AppCompatActivity
     private TimerTask timeTAGTAGsk = new TimerTask() {
 
     private boolean inicio=false;
+
+    private boolean pruebaPiso=false;
 
 
         @Override
@@ -239,7 +256,7 @@ public class MapActivity extends AppCompatActivity
             }
             //FAKE ALGORITHM FOR TESTING Uncomment to use
 
-            Triangulacion t = new Triangulacion();
+            /*Triangulacion t = new Triangulacion();
             System.out.println(t.ubicacion(1620, 1276, 508,524,1277,715,1453,1927,405));
 
             System.out.println(t.ubicacion(2527,1935,12*39,
@@ -248,12 +265,19 @@ public class MapActivity extends AppCompatActivity
             double[] d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
                     4.602854888940370,-74.06432099640370,3168,3223,2393.972155790736,2383.695434192323);
             System.out.println(d[0]+" "+d[1]);
+            if(!pruebaPiso)
+            {
+                mapwizePlugin.setFloor(-1.0);
+                mapwizePlugin.setFloor(7.0);
+                pruebaPiso=true;
+            }
             mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",d[0],d[1],7.0,System.currentTimeMillis()));
             Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
-            mapwizeLocationProvider.setAccessPointsRunning(true);
+            mapwizeLocationProvider.setAccessPointsRunning(true);*/
+
 
             //REAL ALGORITHM Uncomment to use
-            /*
+
             Triangulacion t = new Triangulacion();
             //Posiciones de los routers encontrados en el mapa
             String[]temp;
@@ -264,6 +288,7 @@ public class MapActivity extends AppCompatActivity
                         accessPoints.get(indices[1].getPreBssid()).getX(),accessPoints.get(indices[1].getPreBssid()).getY(),t.dbmAMetros(indices[1].getScan().level,indices[1].getScan().frequency)*39,
                         accessPoints.get(indices[2].getPreBssid()).getX(),accessPoints.get(indices[2].getPreBssid()).getY(),t.dbmAMetros(indices[2].getScan().level,indices[2].getScan().frequency)*39).split(";");
                 //Crea el marcador con las ubicaciones en latitud y longitud
+                //Estos son los puntos de la transformación lineal guardada para el ML
                 d=t.transformPixelToLatLng(4.603270627176880,-74.06486481428140,4.602725221337820,-74.06529933214190,
                         4.602854888940370,-74.06432099640370,3168,3223,Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
                 if(Double.isNaN(d[0])||Double.isNaN(d[1]))
@@ -317,7 +342,12 @@ public class MapActivity extends AppCompatActivity
                     mapwizeLocationProvider.setAccessPointsRunning(true);
 
                 }
-            }*/
+            }
+            else
+            {
+                Log.d("TAGTAG","Es ilocalizable");
+                mapwizeLocationProvider.setAccessPointsRunning(false);
+            }
 
 
         }
@@ -526,11 +556,31 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
-
         accessPoints=new HashMap<>();
-        accessPoints.put("30:37:a6:c2:c4",new PixelLocation(2558, 2344));
-        accessPoints.put("d8:24:bd:4f:71",new PixelLocation(2005,2344));
-        accessPoints.put("00:25:45:a3:92",new PixelLocation(2527,1935));
+        db=FirebaseFirestore.getInstance();
+        db.collection("accessPoints")
+                .whereEqualTo("piso",Math.round(7.0))
+                .whereEqualTo("edificio","ML")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot accessPoint : task.getResult()) {
+                                //Get phone field and append to list
+                                accessPoints.put(((String)accessPoint.getData().get("BSSID")).substring(0,14),new PixelLocation((Long)accessPoint.getData().get("x"),(Long)accessPoint.getData().get("y")));
+
+                            }
+                        } else {
+                            Log.w("ACCESSPOINTS", "Error getting access points of the building.", task.getException());
+                        }
+                        for(String k:accessPoints.keySet())
+                        {
+                            Log.d("ACCESSPOINTS",k+" "+accessPoints.get(k).getX()+accessPoints.get(k).getY());
+                        }
+                    }
+                });
+
         Mapbox.getInstance(this, "pk.eyJ1Ijoic2d1em1hbm0iLCJhIjoiY2pleXB3aW45MDkxZDJxcDZzY3FnaTh2ZCJ9.B7iUjwcIAXVEmjQx6I3iEA");
         setContentView(R.layout.activity_map);
         findViews();
@@ -849,8 +899,10 @@ public class MapActivity extends AppCompatActivity
                 mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, opts);
                 mapwizePlugin.setPreferredLanguage(Locale.getDefault().getLanguage());
                 mapwizePlugin.setTopPadding((int)convertDpToPixel(TOP_PADDING,MapActivity.this));
+                mapwizePlugin.setFloor(-1.0);
                 initInterfaceComponents();
                 initMapwizePluginListeners();
+                mapwizePlugin.setFloor(7.0);
                 requestLocationPermission();
                 setupSearchEditTexts();
 
@@ -1142,6 +1194,7 @@ public class MapActivity extends AppCompatActivity
 
     private void initMapwizePluginListeners() {
         Log.d("MY TAG",9+"");
+
 
         mapwizePlugin.setOnMapClickListener(new MapwizePlugin.OnMapClickListener() {
             @Override

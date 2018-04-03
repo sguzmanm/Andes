@@ -24,7 +24,7 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     MapwizeLocationProvider(Context context) {
         super();
         mGpsIndoorLocationProvider = new GPSIndoorLocationProvider(context);
-
+        mStarted=false;
     }
 
     @Override
@@ -107,5 +107,6 @@ public class MapwizeLocationProvider extends IndoorLocationProvider implements I
     public void setAccessPointsRunning(boolean b)
     {
         accessPointsRunning=b;
+
     }
 }
