@@ -1,7 +1,9 @@
 package com.andes;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.andes.Mapwize.Mapwize;
 import com.andes.Mapwize.MapwizePackage;
 import com.facebook.react.ReactApplication;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -13,8 +15,11 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class MainApplication extends Application implements ReactApplication {
+
+  private Mapwize mapwize;
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -28,7 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
               new LinearGradientPackage(),
               new VectorIconsPackage(),
-              new MapwizePackage(),
+              new MapwizePackage(mapwize),
               new AnExamplePackage()
       );
     }
@@ -46,7 +51,9 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public void onCreate() {
+    this.mapwize = new Mapwize(this, getCacheDir(), getAssets());
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    //this.mapwize = new Mapwize(this, getCacheDir(), getAssets());
   }
 }
