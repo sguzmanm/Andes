@@ -203,9 +203,6 @@ public class MapActivity extends AppCompatActivity
 
     private boolean inicio=false;
 
-    private boolean pruebaPiso=false;
-
-
         @Override
         public void run() {
             if(!inicio)
