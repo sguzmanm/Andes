@@ -77,13 +77,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -111,6 +115,7 @@ import io.mapwize.mapwizeformapbox.model.Route;
 import io.mapwize.mapwizeformapbox.model.Translation;
 import io.mapwize.mapwizeformapbox.model.Universe;
 import io.mapwize.mapwizeformapbox.model.Venue;
+import io.realm.RealmList;
 import resources.Arco;
 import resources.CustomResult;
 import resources.Nodo;
@@ -1224,6 +1229,34 @@ public class MapActivity extends AppCompatActivity
         mapwizePlugin.setOnVenueEnterListener(new MapwizePlugin.OnVenueEnterListener() {
             @Override
             public void onVenueEnter(Venue venue) {
+
+                List<String> lang = new ArrayList<>();
+                lang.add("es");
+
+                RealmList<Universe> univs = new RealmList<>();
+                univs.add(new Universe("5a93787a0fd168001331d52e", "Default universe"));
+
+                RealmList<Translation> trns = new RealmList<>();
+                trns.add(new Translation("5ab0172618b488002742baf7", "Andes", "", "", "es"));
+
+                SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
+                format.setTimeZone(TimeZone.getTimeZone("GMT-05:00"));
+                Log.d("VENUE", venue.toString());
+                Venue v = null;
+                try {
+                    v = new Venue("5ab0172618b488002742baf6", "ML", "andes", "es", lang, "https://mapwizecdn2.azureedge.net/sdk/mapwize.js/images/venue-50.png",
+                            new LatLngFloor(4.602767998132922, -74.06478032469751, 7.0), "com.mapbox.services.commons.geojson.Polygon@e5f4d34",
+               /*var 9 ->*/ univs, trns, true, false, false, format.parse("Tue Mar 27 22:00:22 GMT-05:00 2018"));
+                } catch (ParseException e) {
+                    Log.d("ERRORVENUE", e.getMessage());
+                    e.printStackTrace();
+                }
+
+                Log.d("VENUE", venue.toString());
+
+                Log.d("VENUECOPIAO", v.toString());
+
+                Log.d("VENUEEQ", String.valueOf(v.equals(venue)));
 
                 if (directionByVenue.get(venue.getId()) != null) {
                     FullDirectionObject o = directionByVenue.get(venue.getId());
