@@ -1979,6 +1979,37 @@ public class MapActivity extends AppCompatActivity
             }
         }
     }
+    
+    private double getDistance(String a, String b) {
+    	String[] arrA = a.split(",");
+    	String[] arrB = b.split(",");
+    	double x = Double.parseDouble(arrA[0])-Double.parseDouble(arrB[0]);
+    	double y = Double.parseDouble(arrA[0])-Double.parseDouble(arrB[0]);
+    	return x*x + y*y;
+    }
+    
+    public List<String> getRoute(String from, String to) {
+    	int minA = 0, minB = 0;
+    	double dMinA = 10000, dMinB = 10000;
+    	for(int i = 0; i < nodos.size(); i++) {
+    		double dA = getDistance(nodos[i].coordenadas, from);
+    		double dB = getDistance(nodos[i].coordenadas, to);
+    		if(dA < dminA) {
+    			minA = i;
+    			dMinA = dA;
+    		}
+    		if(dB < dminB) {
+    			minB = i;
+    			dMinB = dB;
+    		}
+    	}
+    	List<String> ans = new ArrayList<>();
+    	ans.add(from);
+    	ans.addAll(getRoute(minA,minB));
+    	ans.add(to);
+    	return ans;
+    }
+
 
     public List<String> getRoute(int from, int to) {
         Log.d("TAG2","Entra");
