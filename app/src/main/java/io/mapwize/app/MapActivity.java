@@ -54,6 +54,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -81,7 +82,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -202,6 +202,12 @@ public class MapActivity extends AppCompatActivity
 
     private boolean testingRoutes=true;
     private boolean isExternalTest=false;
+
+    //Ubicaciones para aproximar al presionar
+    private com.mapbox.mapboxsdk.annotations.Marker destinationMarker;
+    private com.mapbox.mapboxsdk.annotations.Marker originMarker;
+    private LatLng originCoord;
+    private LatLng destinationCoord;
     //Do timer activity
     private Timer timer;
     private TimerTask timeTAGTAGsk = new TimerTask() {
@@ -898,6 +904,43 @@ public class MapActivity extends AppCompatActivity
                     Log.d("ERROR",e.getMessage(),e);
                 }
                 mapboxMap = mMap;
+                Log.d("AAAAAAA","SETUP");
+                mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                                                    @Override
+                                                    public void onMapClick(@NonNull LatLng point) {
+                                                        if (originCoord != null && destinationCoord != null) {
+                                                            fromDirectionPoint=null;
+                                                            toDirectionPoint=null;
+                                                            mapboxMap.removeMarker(destinationMarker);
+                                                            mapboxMap.removeMarker(originMarker);
+                                                            originCoord = null;
+                                                            destinationCoord = null;
+                                                        } else if (originCoord == null) {
+                                                            originCoord = point;
+                                                            fromDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb");
+                                                            Log.d("AAAAAAA","INICIO "+originCoord.getLatitude()+" "+originCoord.getLongitude());
+                                                        } else if (destinationCoord == null) {
+                                                            destinationCoord = point;
+                                                            toDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b43975fc800138eeef8");
+                                                            Log.d("AAAAAAA","FIN "+destinationCoord.getLatitude()+" "+destinationCoord.getLongitude());
+                                                        }
+                                                        if (originCoord != null && destinationCoord != null) {
+                                                            Log.d("AAAAAAA","CALCULO "+destinationCoord.getLatitude()+" "+destinationCoord.getLongitude());
+                                                            originMarker = mapboxMap.addMarker(new MarkerOptions().position(originCoord));
+                                                            destinationMarker = mapboxMap.addMarker(new MarkerOptions()
+                                                                    .position(destinationCoord)
+                                                            );
+                                                           List<String>route= getRoute(originCoord.getLongitude()+","+originCoord.getLatitude(),destinationCoord.getLongitude()+","+destinationCoord.getLatitude());
+                                                           Log.d("AAAAAAA",originCoord.getLongitude()+","+originCoord.getLatitude()+" "+destinationCoord.getLongitude()+","+destinationCoord.getLatitude()+" "+route.size()+"");
+                                                           for(String r:route)
+                                                               Log.d("AAAAAAA",r);
+                                                           tryToStartDirection(route);
+
+
+                                                        }
+
+                                                    }
+                                                });
                 mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, opts);
                 mapwizePlugin.setPreferredLanguage(Locale.getDefault().getLanguage());
                 mapwizePlugin.setTopPadding((int)convertDpToPixel(TOP_PADDING,MapActivity.this));
@@ -1014,7 +1057,7 @@ public class MapActivity extends AppCompatActivity
                     directionHeaderFromTextView.setText(place.getTranslation(mapwizePlugin.getLanguage()).getTitle());
                     fromDirectionPoint = place;
                 }
-                tryToStartDirection();
+                tryToStartDirection(null);
             }
             if (currentSearchMode == SearchMode.TO_DIRECTION) {
                 if (object instanceof Place) {
@@ -1027,7 +1070,7 @@ public class MapActivity extends AppCompatActivity
                     directionHeaderToTextView.setText(placeList.getTranslation(mapwizePlugin.getLanguage()).getTitle());
                     toDirectionPoint = placeList;
                 }
-                tryToStartDirection();
+                tryToStartDirection(null);
             }
         }
 
@@ -1089,7 +1132,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 setupSearchDirectionUI();
-                tryToStartDirection();
+                tryToStartDirection(null);
             }
         });
 
@@ -1110,7 +1153,7 @@ public class MapActivity extends AppCompatActivity
                     directionHeaderAccessibilityButton.setBackgroundColor(Color.parseColor("#C51586"));
                     directionHeaderAccessibilityButton.setColorFilter(Color.parseColor("#ffffff"));
                 }
-                tryToStartDirection();
+                tryToStartDirection(null);
             }
         });
         directionHeaderBackButton.setOnClickListener(new View.OnClickListener() {
@@ -1261,7 +1304,7 @@ public class MapActivity extends AppCompatActivity
                 if (directionByVenue.get(venue.getId()) != null) {
                     FullDirectionObject o = directionByVenue.get(venue.getId());
                     setupSearchDirectionUI();
-                    startDirection(o.from, o.to, o.direction, false,null);
+                    startDirection(o.direction, false,null,null);
                 }
                 else {
                     setupInVenueUI(venue);
@@ -1437,7 +1480,7 @@ public class MapActivity extends AppCompatActivity
             directionHeaderToTextView.setText(R.string.choose_to);
         }
 
-        tryToStartDirection();
+        tryToStartDirection(null);
     }
 
     private void setupSearchDirectionUI() {
@@ -1480,7 +1523,7 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-    private void startDirection(DirectionPoint fromPoint, DirectionPoint toPoint, Direction direction, boolean fitBounds,LatLngBounds latLngBounds) {
+    private void startDirection( Direction direction, boolean fitBounds,LatLngBounds latLngBounds,List<String> route) {
 
         if (fitBounds) {
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -1491,7 +1534,11 @@ public class MapActivity extends AppCompatActivity
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 10, 400, 10, 300);
             mapboxMap.easeCamera(cu);
         }
-        if(!isExternalTest && testingRoutes)
+        if(route!=null)
+        {
+            testApproximationRoute(route,latLngBounds);
+        }
+        else if(!isExternalTest && testingRoutes)
         {
             testInternalRoute(latLngBounds);
             isExternalTest=true;
@@ -1545,7 +1592,9 @@ public class MapActivity extends AppCompatActivity
         directionButton.setVisibility(View.GONE);*/
     }
 
-    private void tryToStartDirection() {
+
+
+    private void tryToStartDirection(final List<String> route) {
         if (fromDirectionPoint != null && toDirectionPoint != null) {
             Api.getDirection(fromDirectionPoint, toDirectionPoint, isAccessible, new ApiCallback<Direction>() {
                 @Override
@@ -1560,7 +1609,11 @@ public class MapActivity extends AppCompatActivity
                                 directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(object, null, null));
                                 Log.d("RUTA1",mCurrentVenue.getId()+" "+object.toString()+" "+fromDirectionPoint.toString()+" "+toDirectionPoint.toString());
                             }
-                            startDirection(fromDirectionPoint, toDirectionPoint, object, true,object.getBounds());
+                            Log.d("AAAAAAA","Intento iniciar ruta "+route);
+                            if(route!=null)
+                                startDirection( object, true,object.getBounds(),route);
+                            else
+                                startDirection( object, true,object.getBounds(),null);
                         }
                     };
                     uiHandler.post(runnable);
@@ -1989,13 +2042,15 @@ public class MapActivity extends AppCompatActivity
     	int minA = 0, minB = 0;
     	double dMinA = 10000, dMinB = 10000;
     	for(int i = 0; i < nodos.size(); i++) {
-    		double dA = getDistance(nodos[i].coordenadas, from);
-    		double dB = getDistance(nodos[i].coordenadas, to);
-    		if(dA < dminA) {
+    		double dA = getDistance(nodos.get(i).coordenadas, from);
+    		double dB = getDistance(nodos.get(i).coordenadas, to);
+            Log.d("NODOS",nodos.get(i).coordenadas+" "+nodos.get(i).coordenadas);
+            Log.d("NODOS",dA+" "+dB);
+    		if(dA < dMinA) {
     			minA = i;
     			dMinA = dA;
     		}
-    		if(dB < dminB) {
+    		if(dB < dMinB) {
     			minB = i;
     			dMinB = dB;
     		}
@@ -2093,7 +2148,7 @@ public class MapActivity extends AppCompatActivity
             LatLng latLng = new LatLng(Double.parseDouble(sLatLng[1]),Double.parseDouble(sLatLng[0]));
             list.add(latLng);
         }
-        return new Route(0.0,0.0,0.0,false,false,0.0,0.0,latLngBounds,0.0,"","",list);
+        return new Route(7.0,7.0,7.0,false,false,0.0,0.0,latLngBounds,0.0,"","",list);
     }
 
     public void showRoute(final int from, final int to, final LatLngBounds latLngBounds) {
@@ -2167,6 +2222,117 @@ public class MapActivity extends AppCompatActivity
         };
         uiHandler.post(runnable);
 
+    }
+
+    public void showRoute(final String from, final String to, final LatLngBounds latLngBounds) {
+
+
+       /*
+       List<LatLng> lat=new ArrayList<>();
+                lat.add(new LatLng(4.602819464288424,-74.06492784619331,0.0));
+                lat.add(new LatLng(4.602817934672893,-74.06492566238988, 0.0));
+                lat.add(new LatLng(4.602840518562904, -74.06490974128248, 0.0));
+                lat.add(new LatLng(4.602822806236791, -74.06488157808782, 0.0));
+                lat.add(new LatLng(4.602888823577639, -74.06483093089558, 0.0));
+                lat.add(new LatLng(4.602891650369796, -74.06483463943006, 0.0));
+
+                List<LatLngBounds>b=new ArrayList<>();
+                Log.d("TAG2","A");
+                Route r=new Route(0.0,Double.NaN,Double.NaN,true,true,17.0,13.0,latLngBounds,17.0,"","",lat);
+                List<Route> list = new ArrayList<>();
+                list.add(r);
+                LatLng llFrom = r.getPath().get(0);
+                LatLng llTo = r.getPath().get(r.getPath().size()-1);
+                Log.d("TAG2","B");
+
+
+                DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, mCurrentVenue.getId(), "5ab05de59dd371003b82185a", "");
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0,  mCurrentVenue.getId(), "5ab05dc966264600137b2d70", "");
+                Log.d("TAG2","B");
+
+                Direction dir = new Direction(dpwFrom, dpwTo, 17.0, 13.0, list, null, null, null);
+                Log.d("TAG2","B");
+                int i=0;
+        */
+
+
+        Log.d("TAG2","Pone "+from+" "+to+" "+latLngBounds);
+        Handler uiHandler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("TAG2","A");
+                Route r = toRoute(getRoute(from, to),latLngBounds);
+                List<Route> list = new ArrayList<>();
+                list.add(r);
+                LatLng llFrom = r.getPath().get(0);
+                LatLng llTo = r.getPath().get(r.getPath().size()-1);
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 0.0, mCurrentVenue.getId(), "5ab05de59dd371003b82185a", "");
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 0.0,  mCurrentVenue.getId(), "5ab05dc966264600137b2d70", "");
+                Log.d("TAG2","B");
+
+                Direction dir = new Direction(dpwFrom, dpwTo, 0.0, 0.0, list, latLngBounds, null, null);
+                Log.d("TAG2","B "+latLngBounds+" "+dir.getBounds());
+
+                Log.d("TAG2","Pone");
+
+                if (mCurrentVenue != null) {
+                    directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(dir, null, null));
+                    Log.d("RUTA1",mCurrentVenue.getId()+" "+dir.toString()+" "+fromDirectionPoint.toString()+" "+toDirectionPoint.toString());
+                }
+                unselectContent();
+                mapwizePlugin.removeMarkers();
+                mapwizePlugin.addMarker(new LatLngFloor(llFrom.getLatitude(),llFrom.getLongitude(),llFrom.getAltitude()));
+                mapwizePlugin.addMarker(new LatLngFloor(llTo.getLatitude(),llTo.getLongitude(),llTo.getAltitude()));
+                mapwizePlugin.setDirection(dir);
+            }
+        };
+        uiHandler.post(runnable);
+
+    }
+
+    private void testApproximationRoute(final List<String> route, final LatLngBounds latLngBounds) {
+        Handler uiHandler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("TAG2","A");
+                Route r = toRoute(route,latLngBounds);
+                List<Route> list = new ArrayList<>();
+                list.add(r);
+                LatLng llFrom = r.getPath().get(0);
+                LatLng llTo = r.getPath().get(r.getPath().size()-1);
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwFrom = new DirectionPointWrapper(llFrom.getLatitude(), llFrom.getLongitude(), 7.0, mCurrentVenue.getId(), "5ab05de59dd371003b82185a", "");
+                Log.d("TAG2","B");
+
+                DirectionPointWrapper dpwTo = new DirectionPointWrapper(llTo.getLatitude(), llTo.getLongitude(), 7.0,  mCurrentVenue.getId(), "5ab05dc966264600137b2d70", "");
+                Log.d("TAG2","B");
+
+                Direction dir = new Direction(dpwFrom, dpwTo, 0.0, 0.0, list, latLngBounds, null, null);
+                Log.d("TAG2","B "+latLngBounds+" "+dir.getBounds());
+
+                Log.d("TAG2","Pone");
+
+                if (mCurrentVenue != null) {
+                    directionByVenue.put(mCurrentVenue.getId(), new FullDirectionObject(dir, null, null));
+                    Log.d("RUTA1",mCurrentVenue.getId()+" "+dir.toString()+" "+fromDirectionPoint.toString()+" "+toDirectionPoint.toString());
+                }
+                unselectContent();
+                mapwizePlugin.removeMarkers();
+                mapwizePlugin.addMarker(new LatLngFloor(llFrom.getLatitude(),llFrom.getLongitude(),llFrom.getAltitude()));
+                mapwizePlugin.addMarker(new LatLngFloor(llTo.getLatitude(),llTo.getLongitude(),llTo.getAltitude()));
+                mapwizePlugin.setDirection(dir);
+            }
+        };
+        uiHandler.post(runnable);
     }
 
     public void testInternalRoute(LatLngBounds latLngBounds) {
