@@ -139,7 +139,7 @@ public class MapActivity extends AppCompatActivity
     private final int BOTTOM_PADDING = 54;
     private final int TOP_PADDING_DIRECTION = 80;
 
-    private final int NUM_NODOS = 940;
+    private final int NUM_NODOS = 57;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -366,16 +366,16 @@ public class MapActivity extends AppCompatActivity
         }
     };
 
-    public void initializeData() throws IOException, ParserConfigurationException, SAXException {
+    public void initializeData() throws IOException, ParserConfigurationException, SAXException, ParseException {
         nodos = new ArrayList<>(NUM_NODOS);
         adj = new ArrayList<>(NUM_NODOS);
         for(int i = 0; i<NUM_NODOS; i++) {
             adj.add(new ArrayList<Arco>());
         }
-        File file = new File(getCacheDir() + "doc.kml");
+        File file = new File(getCacheDir() + "nodos2.json");
         if (!file.exists()) try {
 
-            InputStream is = getAssets().open("doc.kml");
+            InputStream is = getAssets().open("nodos2.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -390,85 +390,19 @@ public class MapActivity extends AppCompatActivity
         }
         if (file.exists())
         {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line = null;
-            for(int j = 0; j<26; j++) {
-                br.readLine();
-            }
+            JSONParser parser = new JSONParser();
 
-            while((line = br.readLine()) != null) {
-//	    	JSONObject obj = new JSONObject();
+            JSONArray arr = (JSONArray) parser.parse(new FileReader("./data/nodos2.json"));
+            for(int i = 0; i<arr.size(); i++) {
+                JSONObject obj = (JSONObject) arr.get(i);
                 Nodo nodo = new Nodo();
-
-                for(int j = 0; j<30; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.FID = Integer.parseInt(line);
-//	    	obj.put("FID", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.nombre = line;
-//	    	obj.put("nombre", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.piso = Integer.parseInt(line);
-//	    	obj.put("piso", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.bloque = line;
-//	    	obj.put("bloque", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.area = Double.parseDouble(line.replaceAll(",", "."));
-//	    	obj.put("area", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("concentrac", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("cap", line);
-
-                for(int j = 0; j<20; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(22, line.length()-14);
-                nodo.coordenadas = line;
-//	    	obj.put("coordenadas", line);
-
-                //siguiente
-                for(int j = 0; j<5; j++) {
-                    br.readLine();
-                }
-
+                nodo.piso = ((Long) obj.get("floor")).intValue();
+                nodo.FID = ((Long) obj.get("FID")).intValue();
+                nodo.area = ((Long) obj.get("area")).doubleValue();
+                nodo.bloque = (String) obj.get("bloque");
+                nodo.coordenadas = ((Double) obj.get("long")).toString() + "," + ((Double) obj.get("lat")).toString() + ",0";
                 nodos.add(nodo);
-                //arr.add(obj);
             }
-    //	    theObj.put("nodos",arr);
-    //	    System.out.println(theObj);
-    //	    try (FileWriter file = new FileWriter("./data/nodos.json")) {
-    //			file.write(theObj.toJSONString());
-    //			System.out.println("Successfully Copied JSON Object to File...");
-    //			System.out.println("\nJSON Object: " + theObj);
-    //		}
         }
 
 
