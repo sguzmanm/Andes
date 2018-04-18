@@ -231,7 +231,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649086909,4.6030731852,0 -74.06486562864,4.6030393134,0</coordinates>
+          <coordinates> -74.0649086909,4.6030731852,0 -74.0648656286,4.6030393134,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -338,7 +338,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.06486562864,4.6030393134,0 -74.0648204830,4.6030081307</coordinates>
+          <coordinates> -74.0648656286,4.6030393134,0 -74.0648204830,4.6030081307</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1408,7 +1408,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.06486562864,4.6030393134,0 -74.0648769533,4.6030279887,0</coordinates>
+          <coordinates> -74.0648656286,4.6030393134,0 -74.0648769533,4.6030279887,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6437,7 +6437,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646870193,4.6027614672,0 -74,0647367302,4.6027114534,0</coordinates>
+          <coordinates> -74.0646870193,4.6027614672,0 -74.0647367302,4.6027114534,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6544,7 +6544,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74,0647367302,4.6027114534,0 -74.0647668314,4.6026816551,0</coordinates>
+          <coordinates> -74.0647367302,4.6027114534,0 -74.0647668314,4.6026816551,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
