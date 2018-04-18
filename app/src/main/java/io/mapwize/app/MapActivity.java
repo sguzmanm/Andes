@@ -371,7 +371,7 @@ public class MapActivity extends AppCompatActivity
             adj.add(new ArrayList<Arco>());
         }
         File file = new File(getCacheDir() + "nodos2.json");
-        if (!file.exists()) try {
+        try {
 
             InputStream is = getAssets().open("nodos2.json");
             int size = is.available();
@@ -398,7 +398,10 @@ public class MapActivity extends AppCompatActivity
                 nodo.FID = ((Long) obj.get("FID")).intValue();
                 nodo.area = ((Long) obj.get("area")).doubleValue();
                 nodo.bloque = (String) obj.get("bloque");
-                nodo.coordenadas = (String) obj.get("long") + "," + (String) obj.get("lat") + ",0";
+                Log.d("WAT",obj.toJSONString());
+                String lon=(String) obj.get("lon");
+                String lat=(String) obj.get("lat");
+                nodo.coordenadas = lon.replace(". ",".") + "," + lat.replace(". ",".") + ",0";
                 nodos.add(nodo);
             }
             Log.d("NODOS","TAM "+nodos.size());
@@ -411,8 +414,9 @@ public class MapActivity extends AppCompatActivity
         //------------------------------------ARCOS-------------------------------------
         //------------------------------------------------------------------------------
 
+
         File f = new File(getCacheDir()+"red-caminos.kml");
-        if (!f.exists()) try {
+        try {
 
             InputStream is = getAssets().open("red-caminos.kml");
             int size = is.available();
@@ -445,7 +449,8 @@ public class MapActivity extends AppCompatActivity
 
                 String desc = nl2.item(k).getTextContent();
                 String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
-                double length = Double.parseDouble(temp.substring(1,temp.indexOf("<")).replace(',', '.'));
+                Log.d("NODOS","TEMP "+temp);
+                double length = Double.parseDouble(temp.substring(2,temp.indexOf("<")).replace(',', '.'));
 
                 temp = desc.substring(desc.indexOf("Pendiente") + 20);
 //			double pendiente = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
