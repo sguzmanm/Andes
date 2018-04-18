@@ -66,11 +66,14 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.squareup.picasso.Picasso;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -122,11 +125,6 @@ import resources.Nodo;
 import resources.NodoCola;
 import resources.PixelLocation;
 import resources.Triangulacion;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -403,6 +401,7 @@ public class MapActivity extends AppCompatActivity
                 nodo.coordenadas = ((Double) obj.get("long")).toString() + "," + ((Double) obj.get("lat")).toString() + ",0";
                 nodos.add(nodo);
             }
+            Log.d("NODOS","TAM "+nodos.size());
         }
 
 
@@ -439,6 +438,7 @@ public class MapActivity extends AppCompatActivity
 
             //Tiene primero el origen, luego el destino, y de tercero el peso.
             //		List<Arco> aristas = new ArrayList<>();
+            int arcos=0;
 
             for(int k = 0; k < nl1.getLength(); k++) {
                 String[] coords = nl1.item(k).getTextContent().trim().split(" ");
@@ -459,6 +459,7 @@ public class MapActivity extends AppCompatActivity
                 List<Integer> nodosDestino = new ArrayList<>();
 
                 for(Nodo nodo : nodos) {
+                    Log.d("NODOS","COMP "+nodo.coordenadas+" "+origen+" "+nodo.coordenadas+" "+destino);
                     if(nodo.coordenadas.equals(origen)) {
                         nodosOrigen.add(nodo.FID);
                     }
@@ -466,7 +467,7 @@ public class MapActivity extends AppCompatActivity
                         nodosDestino.add(nodo.FID);
                     }
                 }
-
+                Log.d("NODOS",nodosOrigen.size()+" "+nodosDestino.size());
                 if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
                     for(Integer nodo : nodosOrigen) {
                         for(Integer nodo2 : nodosDestino) {
@@ -477,11 +478,15 @@ public class MapActivity extends AppCompatActivity
                             arco.destino = nodo2;
                             adj.get(nodo).add(arco);
                             adj.get(nodo2).add(arco);
+                            arcos++;
                         }
                     }
 
                 }
+
             }
+            Log.d("NODOS","ARCOS "+arcos);
+
         }
 
     }
