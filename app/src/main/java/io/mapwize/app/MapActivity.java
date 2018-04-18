@@ -76,6 +76,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -2030,27 +2031,27 @@ public class MapActivity extends AppCompatActivity
         }
     }
     
-    private double getDistance(String a, String b) {
+    private BigDecimal getDistance(String a, String b) {
     	String[] arrA = a.split(",");
     	String[] arrB = b.split(",");
-    	double x = Double.parseDouble(arrA[0])-Double.parseDouble(arrB[0]);
-    	double y = Double.parseDouble(arrA[0])-Double.parseDouble(arrB[0]);
-    	return x*x + y*y;
+    	BigDecimal x = new BigDecimal(arrA[0]).subtract(new BigDecimal(arrB[0]));
+    	BigDecimal y = new BigDecimal(arrA[1]).subtract(new BigDecimal(arrB[1]));
+    	return x.multiply(x).add(y.multiply(y));
     }
     
     public List<String> getRoute(String from, String to) {
     	int minA = 0, minB = 0;
-    	double dMinA = 10000, dMinB = 10000;
+    	BigDecimal dMinA = BigDecimal.TEN, dMinB = BigDecimal.TEN;
     	for(int i = 0; i < nodos.size(); i++) {
-    		double dA = getDistance(nodos.get(i).coordenadas, from);
-    		double dB = getDistance(nodos.get(i).coordenadas, to);
+    		BigDecimal dA = getDistance(nodos.get(i).coordenadas, from);
+    		BigDecimal dB = getDistance(nodos.get(i).coordenadas, to);
             Log.d("NODOS",nodos.get(i).coordenadas+" "+nodos.get(i).coordenadas);
             Log.d("NODOS",dA+" "+dB);
-    		if(dA < dMinA) {
+    		if(dA.compareTo(dMinA) < 0) {
     			minA = i;
     			dMinA = dA;
     		}
-    		if(dB < dMinB) {
+    		if(dB.compareTo(dMinB) < 0) {
     			minB = i;
     			dMinB = dB;
     		}
@@ -2061,6 +2062,7 @@ public class MapActivity extends AppCompatActivity
     	ans.add(to);
     	return ans;
     }
+
 
 
     public List<String> getRoute(int from, int to) {
