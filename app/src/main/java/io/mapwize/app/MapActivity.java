@@ -78,7 +78,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,6 +121,11 @@ import resources.Nodo;
 import resources.NodoCola;
 import resources.PixelLocation;
 import resources.Triangulacion;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -1290,7 +1294,7 @@ public class MapActivity extends AppCompatActivity
                     v = new Venue("5ab0172618b488002742baf6", "ML", "andes", "es", lang, "https://mapwizecdn2.azureedge.net/sdk/mapwize.js/images/venue-50.png",
                             new LatLngFloor(4.602767998132922, -74.06478032469751, 7.0), "com.mapbox.services.commons.geojson.Polygon@e5f4d34",
                /*var 9 ->*/ univs, trns, true, false, false, format.parse("Tue Mar 27 22:00:22 GMT-05:00 2018"));
-                } catch (ParseException e) {
+                } catch (java.text.ParseException e) {
                     Log.d("ERRORVENUE", e.getMessage());
                     e.printStackTrace();
                 }
