@@ -139,7 +139,7 @@ public class MapActivity extends AppCompatActivity
     private final int BOTTOM_PADDING = 54;
     private final int TOP_PADDING_DIRECTION = 80;
 
-    private final int NUM_NODOS = 57;
+    private final int NUM_NODOS = 56;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -400,7 +400,7 @@ public class MapActivity extends AppCompatActivity
                 nodo.FID = ((Long) obj.get("FID")).intValue();
                 nodo.area = ((Long) obj.get("area")).doubleValue();
                 nodo.bloque = (String) obj.get("bloque");
-                nodo.coordenadas = ((Double) obj.get("long")).toString() + "," + ((Double) obj.get("lat")).toString() + ",0";
+                nodo.coordenadas = (String) obj.get("long") + "," + (String) obj.get("lat") + ",0";
                 nodos.add(nodo);
             }
         }
