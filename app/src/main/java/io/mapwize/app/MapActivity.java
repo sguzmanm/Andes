@@ -392,7 +392,7 @@ public class MapActivity extends AppCompatActivity
         {
             JSONParser parser = new JSONParser();
 
-            JSONArray arr = (JSONArray) parser.parse(new FileReader("./data/nodos2.json"));
+            JSONArray arr = (JSONArray) parser.parse(new FileReader(file));
             for(int i = 0; i<arr.size(); i++) {
                 JSONObject obj = (JSONObject) arr.get(i);
                 Nodo nodo = new Nodo();
