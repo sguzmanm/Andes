@@ -84,7 +84,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -120,11 +119,11 @@ import io.mapwize.mapwizeformapbox.model.Universe;
 import io.mapwize.mapwizeformapbox.model.Venue;
 import io.realm.RealmList;
 import resources.Arco;
-import resources.CustomResult;
 import resources.KNN;
 import resources.Nodo;
 import resources.NodoCola;
 import resources.PixelLocation;
+import resources.PuntoRef;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -226,7 +225,7 @@ public class MapActivity extends AppCompatActivity
                 Looper.prepare();
             }
             //Algoritmo de triangulación con custom result
-           HashMap<String,CustomResult> bssid=new HashMap<>();
+           /*HashMap<String,CustomResult> bssid=new HashMap<>();
             WifiManager wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             List<ScanResult> results=wifiManager.getScanResults();
             ArrayList<CustomResult> list=new ArrayList<>();
@@ -265,14 +264,14 @@ public class MapActivity extends AppCompatActivity
                 }
                 if(num>=3)
                     break;
-            }
+            }*/
 
 
             final HashMap<String,Double> newId=new HashMap<>();
-             wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-             results=wifiManager.getScanResults();
+            WifiManager wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            List<ScanResult> results=wifiManager.getScanResults();
             ArrayList<Double> doubles=new ArrayList<>();
-            message="No results. Check wireless on";
+            String message="No results. Check wireless on";
             if(results!=null)
             {
                 final int size=results.size();
@@ -281,7 +280,7 @@ public class MapActivity extends AppCompatActivity
                     message="";
                     for(ScanResult sc:results)
                     {
-                        if(bssid.get(sc.BSSID.substring(0,14))==null)
+                        if(newId.get(sc.BSSID.substring(0,14))==null)
                         {
                             newId.put(sc.BSSID.substring(0,14),(double)sc.level);
                         }
@@ -289,13 +288,17 @@ public class MapActivity extends AppCompatActivity
 
                 }
             }
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    int[] loc=knn.ubicacion(newId,3);
-                    Log.d("KNN",loc[0]+" "+loc[1]);
-                    Toast.makeText(getApplicationContext(), loc[0]+" "+loc[1], Toast.LENGTH_LONG).show();
-                }
-            });
+            if(knn!=null)
+            {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        int[] loc=knn.ubicacion(newId,3);
+                        Log.d("KNN",loc[0]+" "+loc[1]);
+                        Toast.makeText(getApplicationContext(), loc[0]+" "+loc[1], Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
 
             //FAKE ALGORITHM FOR TESTING Uncomment to use
 
@@ -543,7 +546,6 @@ public class MapActivity extends AppCompatActivity
         Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
         accessPoints=new HashMap<>();
-        knn=new KNN();
         db=FirebaseFirestore.getInstance();
         db.collection("accessPoints")
                 .whereEqualTo("piso",Math.round(7.0))
@@ -564,6 +566,67 @@ public class MapActivity extends AppCompatActivity
                         for(String k:accessPoints.keySet())
                         {
                             Log.d("ACCESSPOINTS",k+" "+accessPoints.get(k).getX()+accessPoints.get(k).getY());
+                        }
+                    }
+                });
+        db.collection("lecturas")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            PuntoRef[] nodosRef=new PuntoRef[63];
+                            int i=0;
+                            for (DocumentSnapshot refPoint : task.getResult()) {
+                                PuntoRef puntoRef=new PuntoRef();
+                                puntoRef.coordenadas=new long[]{(long)refPoint.getData().get("x"),(long)refPoint.getData().get("y")};
+                                Map<String,Double> map=new HashMap<>();
+                                Map<String,Integer> conteo=new HashMap<>();
+                                Map<String,Map<String,Object>> val=(Map<String,Map<String,Object>>)refPoint.getData().get("lectura");
+                                for(String s:val.keySet())
+                                {
+                                    map.put((String)val.get(s).get("BSSID"),(Double)val.get(s).get("dbm"));
+                                }
+                                puntoRef.senales=map;
+                                boolean encontrado=false;
+                                for(int j=0;j<i;j++)
+                                {
+                                    if(nodosRef[j].coordenadas[0]==puntoRef.coordenadas[0] && nodosRef[j].coordenadas[1]==puntoRef.coordenadas[1])
+                                    {
+                                        for(String s:nodosRef[j].senales.keySet())
+                                        {
+                                            if(puntoRef.senales.get(s)!=null)
+                                            {
+                                                nodosRef[j].senales.put(s,(nodosRef[j].senales.get(s)+puntoRef.senales.get(s)));
+                                            }
+                                        }
+                                        nodosRef[j].conteo++;
+                                        encontrado=true;
+                                        break;
+                                    }
+
+                                }
+                                if(!encontrado)
+                                {
+                                    nodosRef[i]=puntoRef;
+                                    nodosRef[i].conteo=1;
+                                    Log.d("KNN","CANT "+(i+1));
+                                    i++;
+
+                                }
+                            }
+                            for(PuntoRef puntoRef:nodosRef)
+                            {
+                                for(String s:puntoRef.senales.keySet())
+                                {
+                                    Log.d("PREF",s+" "+puntoRef.senales.get(s)+" "+puntoRef.conteo);
+                                    puntoRef.senales.put(s,puntoRef.senales.get(s)/puntoRef.conteo);
+                                }
+                            }
+                            knn=new KNN(nodosRef);
+
+                        } else {
+                            Log.d("KNN", "Error getting access points of the building.", task.getException());
                         }
                     }
                 });
