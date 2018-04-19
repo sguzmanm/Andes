@@ -449,7 +449,6 @@ public class MapActivity extends AppCompatActivity
 
                 String desc = nl2.item(k).getTextContent();
                 String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
-                Log.d("NODOS","TEMP "+temp);
                 double length = Double.parseDouble(temp.substring(2,temp.indexOf("<")).replace(',', '.'));
 
                 temp = desc.substring(desc.indexOf("Pendiente") + 20);
@@ -464,7 +463,6 @@ public class MapActivity extends AppCompatActivity
                 List<Integer> nodosDestino = new ArrayList<>();
 
                 for(Nodo nodo : nodos) {
-                    Log.d("NODOS","COMP "+nodo.coordenadas+" "+origen+" "+nodo.coordenadas+" "+destino);
                     if(nodo.coordenadas.equals(origen)) {
                         nodosOrigen.add(nodo.FID);
                     }
@@ -472,7 +470,6 @@ public class MapActivity extends AppCompatActivity
                         nodosDestino.add(nodo.FID);
                     }
                 }
-                Log.d("NODOS",nodosOrigen.size()+" "+nodosDestino.size());
                 if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
                     for(Integer nodo : nodosOrigen) {
                         for(Integer nodo2 : nodosDestino) {
@@ -854,6 +851,10 @@ public class MapActivity extends AppCompatActivity
                 }
                 mapboxMap = mMap;
                 Log.d("AAAAAAA","SETUP");
+                Log.d("AAAAAAA","SUP IZQ "+mapwizePlugin.getPlaceForId("5aba5b43975fc800138eeef8").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
+                Log.d("AAAAAAA","SUP DER "+mapwizePlugin.getPlaceForId("5aba803bbdaf3200136ea7c7").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
+                Log.d("AAAAAAA","ABAJO IZQ "+mapwizePlugin.getPlaceForId("5aba5b1ca7255f00131e6211").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
+
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                                                     @Override
                                                     public void onMapClick(@NonNull LatLng point) {
@@ -1993,8 +1994,7 @@ public class MapActivity extends AppCompatActivity
     	for(int i = 0; i < nodos.size(); i++) {
     		BigDecimal dA = getDistance(nodos.get(i).coordenadas, from);
     		BigDecimal dB = getDistance(nodos.get(i).coordenadas, to);
-            Log.d("NODOS",nodos.get(i).coordenadas+" "+nodos.get(i).coordenadas);
-            Log.d("NODOS",dA+" "+dB);
+
     		if(dA.compareTo(dMinA) < 0) {
     			minA = i;
     			dMinA = dA;
