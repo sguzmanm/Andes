@@ -7,7 +7,7 @@
     <item>
 
         <bitmap
-            android:src="@mipmap/splash_mapwize"
+            android:src="@mipmap/splash_andes"
             android:gravity="center" />
     </item>
 

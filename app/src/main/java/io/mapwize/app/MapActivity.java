@@ -851,9 +851,6 @@ public class MapActivity extends AppCompatActivity
                 }
                 mapboxMap = mMap;
                 Log.d("AAAAAAA","SETUP");
-                Log.d("AAAAAAA","SUP IZQ "+mapwizePlugin.getPlaceForId("5aba5b43975fc800138eeef8").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
-                Log.d("AAAAAAA","SUP DER "+mapwizePlugin.getPlaceForId("5aba803bbdaf3200136ea7c7").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
-                Log.d("AAAAAAA","ABAJO IZQ "+mapwizePlugin.getPlaceForId("5aba5b1ca7255f00131e6211").getLongitudeMax()+" "+mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb").getLatitudeMax());
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                                                     @Override
@@ -866,12 +863,14 @@ public class MapActivity extends AppCompatActivity
                                                             originCoord = null;
                                                             destinationCoord = null;
                                                         } else if (originCoord == null) {
-                                                            originCoord = point;
+                                                             originCoord = point;
                                                             fromDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb");
+                                                            originMarker = mapboxMap.addMarker(new MarkerOptions().position(point));
                                                             Log.d("AAAAAAA","INICIO "+originCoord.getLatitude()+" "+originCoord.getLongitude());
                                                         } else if (destinationCoord == null) {
                                                             destinationCoord = point;
                                                             toDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b43975fc800138eeef8");
+                                                            destinationMarker = mapboxMap.addMarker(new MarkerOptions().position(point));
                                                             Log.d("AAAAAAA","FIN "+destinationCoord.getLatitude()+" "+destinationCoord.getLongitude());
                                                         }
                                                         if (originCoord != null && destinationCoord != null) {
@@ -894,12 +893,13 @@ public class MapActivity extends AppCompatActivity
                 mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, opts);
                 mapwizePlugin.setPreferredLanguage(Locale.getDefault().getLanguage());
                 mapwizePlugin.setTopPadding((int)convertDpToPixel(TOP_PADDING,MapActivity.this));
-                mapwizePlugin.setFloor(-1.0);
+
                 initInterfaceComponents();
                 initMapwizePluginListeners();
-                mapwizePlugin.setFloor(7.0);
                 requestLocationPermission();
+
                 setupSearchEditTexts();
+
 
             }
         });
