@@ -865,12 +865,10 @@ public class MapActivity extends AppCompatActivity
                                                         } else if (originCoord == null) {
                                                              originCoord = point;
                                                             fromDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb");
-                                                            originMarker = mapboxMap.addMarker(new MarkerOptions().position(point));
                                                             Log.d("AAAAAAA","INICIO "+originCoord.getLatitude()+" "+originCoord.getLongitude());
                                                         } else if (destinationCoord == null) {
                                                             destinationCoord = point;
                                                             toDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b43975fc800138eeef8");
-                                                            destinationMarker = mapboxMap.addMarker(new MarkerOptions().position(point));
                                                             Log.d("AAAAAAA","FIN "+destinationCoord.getLatitude()+" "+destinationCoord.getLongitude());
                                                         }
                                                         if (originCoord != null && destinationCoord != null) {
