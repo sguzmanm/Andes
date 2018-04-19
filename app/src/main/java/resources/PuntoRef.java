@@ -4,7 +4,7 @@ import java.util.Map;
 
 class PuntoRef implements Comparable<PuntoRef> {
     Map<String, Double> senales;
-    int[] coordenadas;
+    long[] coordenadas;
     double diferencia;
 
     public int compareTo(PuntoRef o) {

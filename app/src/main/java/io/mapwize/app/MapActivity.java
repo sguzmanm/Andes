@@ -121,10 +121,10 @@ import io.mapwize.mapwizeformapbox.model.Venue;
 import io.realm.RealmList;
 import resources.Arco;
 import resources.CustomResult;
+import resources.KNN;
 import resources.Nodo;
 import resources.NodoCola;
 import resources.PixelLocation;
-import resources.Triangulacion;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -199,6 +199,7 @@ public class MapActivity extends AppCompatActivity
     //------------
     private List<Nodo> nodos;
     private List<List<Arco>> adj;
+    private KNN knn;
 
 
     private HashMap<String, PixelLocation> accessPoints;
@@ -224,8 +225,8 @@ public class MapActivity extends AppCompatActivity
                 inicio=true;
                 Looper.prepare();
             }
-
-            HashMap<String,CustomResult> bssid=new HashMap<>();
+            //Algoritmo de triangulación con custom result
+           HashMap<String,CustomResult> bssid=new HashMap<>();
             WifiManager wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             List<ScanResult> results=wifiManager.getScanResults();
             ArrayList<CustomResult> list=new ArrayList<>();
@@ -265,6 +266,37 @@ public class MapActivity extends AppCompatActivity
                 if(num>=3)
                     break;
             }
+
+
+            final HashMap<String,Double> newId=new HashMap<>();
+             wifiManager=(WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+             results=wifiManager.getScanResults();
+            ArrayList<Double> doubles=new ArrayList<>();
+            message="No results. Check wireless on";
+            if(results!=null)
+            {
+                final int size=results.size();
+                if(size==0) message="No access points in route";
+                else {
+                    message="";
+                    for(ScanResult sc:results)
+                    {
+                        if(bssid.get(sc.BSSID.substring(0,14))==null)
+                        {
+                            newId.put(sc.BSSID.substring(0,14),(double)sc.level);
+                        }
+                    }
+
+                }
+            }
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    int[] loc=knn.ubicacion(newId,3);
+                    Log.d("KNN",loc[0]+" "+loc[1]);
+                    Toast.makeText(getApplicationContext(), loc[0]+" "+loc[1], Toast.LENGTH_LONG).show();
+                }
+            });
+
             //FAKE ALGORITHM FOR TESTING Uncomment to use
 
             /*Triangulacion t = new Triangulacion();
@@ -289,7 +321,7 @@ public class MapActivity extends AppCompatActivity
 
             //REAL ALGORITHM Uncomment to use
 
-            Triangulacion t = new Triangulacion();
+            /*Triangulacion t = new Triangulacion();
             //Posiciones de los routers encontrados en el mapa
             String[]temp;
             double[]d;
@@ -358,7 +390,7 @@ public class MapActivity extends AppCompatActivity
             {
                 Log.d("TAGTAG","Es ilocalizable");
                 mapwizeLocationProvider.setAccessPointsRunning(false);
-            }
+            }*/
 
 
         }
@@ -498,7 +530,7 @@ public class MapActivity extends AppCompatActivity
             return;
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 2000);
+        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 10000);
     }
 
     public void stop() {
@@ -511,6 +543,7 @@ public class MapActivity extends AppCompatActivity
         Log.d("MY TAG",1+"");
         super.onCreate(savedInstanceState);
         accessPoints=new HashMap<>();
+        knn=new KNN();
         db=FirebaseFirestore.getInstance();
         db.collection("accessPoints")
                 .whereEqualTo("piso",Math.round(7.0))
