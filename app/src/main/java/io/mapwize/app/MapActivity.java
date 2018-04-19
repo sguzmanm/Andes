@@ -66,11 +66,14 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.squareup.picasso.Picasso;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -79,7 +82,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,7 +137,7 @@ public class MapActivity extends AppCompatActivity
     private final int BOTTOM_PADDING = 54;
     private final int TOP_PADDING_DIRECTION = 80;
 
-    private final int NUM_NODOS = 940;
+    private final int NUM_NODOS = 56;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -362,16 +364,16 @@ public class MapActivity extends AppCompatActivity
         }
     };
 
-    public void initializeData() throws IOException, ParserConfigurationException, SAXException {
+    public void initializeData() throws IOException, ParserConfigurationException, SAXException, ParseException {
         nodos = new ArrayList<>(NUM_NODOS);
         adj = new ArrayList<>(NUM_NODOS);
         for(int i = 0; i<NUM_NODOS; i++) {
             adj.add(new ArrayList<Arco>());
         }
-        File file = new File(getCacheDir() + "doc.kml");
-        if (!file.exists()) try {
+        File file = new File(getCacheDir() + "nodos2.json");
+        try {
 
-            InputStream is = getAssets().open("doc.kml");
+            InputStream is = getAssets().open("nodos2.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -386,85 +388,23 @@ public class MapActivity extends AppCompatActivity
         }
         if (file.exists())
         {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line = null;
-            for(int j = 0; j<26; j++) {
-                br.readLine();
-            }
+            JSONParser parser = new JSONParser();
 
-            while((line = br.readLine()) != null) {
-//	    	JSONObject obj = new JSONObject();
+            JSONArray arr = (JSONArray) parser.parse(new FileReader(file));
+            for(int i = 0; i<arr.size(); i++) {
+                JSONObject obj = (JSONObject) arr.get(i);
                 Nodo nodo = new Nodo();
-
-                for(int j = 0; j<30; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.FID = Integer.parseInt(line);
-//	    	obj.put("FID", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.nombre = line;
-//	    	obj.put("nombre", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.piso = Integer.parseInt(line);
-//	    	obj.put("piso", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.bloque = line;
-//	    	obj.put("bloque", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(4, line.length()-5);
-                nodo.area = Double.parseDouble(line.replaceAll(",", "."));
-//	    	obj.put("area", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("concentrac", line);
-
-                for(int j = 0; j<8; j++) {
-                    line = br.readLine();
-                }
-//	    	line = line.substring(4, line.length()-5);
-//	    	obj.put("cap", line);
-
-                for(int j = 0; j<20; j++) {
-                    line = br.readLine();
-                }
-                line = line.substring(22, line.length()-14);
-                nodo.coordenadas = line;
-//	    	obj.put("coordenadas", line);
-
-                //siguiente
-                for(int j = 0; j<5; j++) {
-                    br.readLine();
-                }
-
+                nodo.piso = ((Long) obj.get("floor")).intValue();
+                nodo.FID = ((Long) obj.get("FID")).intValue();
+                nodo.area = ((Long) obj.get("area")).doubleValue();
+                nodo.bloque = (String) obj.get("bloque");
+                Log.d("WAT",obj.toJSONString());
+                String lon=(String) obj.get("lon");
+                String lat=(String) obj.get("lat");
+                nodo.coordenadas = lon.replace(". ",".") + "," + lat.replace(". ",".") + ",0";
                 nodos.add(nodo);
-                //arr.add(obj);
             }
-    //	    theObj.put("nodos",arr);
-    //	    System.out.println(theObj);
-    //	    try (FileWriter file = new FileWriter("./data/nodos.json")) {
-    //			file.write(theObj.toJSONString());
-    //			System.out.println("Successfully Copied JSON Object to File...");
-    //			System.out.println("\nJSON Object: " + theObj);
-    //		}
+            Log.d("NODOS","TAM "+nodos.size());
         }
 
 
@@ -474,8 +414,9 @@ public class MapActivity extends AppCompatActivity
         //------------------------------------ARCOS-------------------------------------
         //------------------------------------------------------------------------------
 
+
         File f = new File(getCacheDir()+"red-caminos.kml");
-        if (!f.exists()) try {
+        try {
 
             InputStream is = getAssets().open("red-caminos.kml");
             int size = is.available();
@@ -501,13 +442,14 @@ public class MapActivity extends AppCompatActivity
 
             //Tiene primero el origen, luego el destino, y de tercero el peso.
             //		List<Arco> aristas = new ArrayList<>();
+            int arcos=0;
 
             for(int k = 0; k < nl1.getLength(); k++) {
                 String[] coords = nl1.item(k).getTextContent().trim().split(" ");
 
                 String desc = nl2.item(k).getTextContent();
                 String temp = desc.substring(desc.indexOf("SHAPE_Leng") + 21);
-                double length = Double.parseDouble(temp.substring(1,temp.indexOf("<")).replace(',', '.'));
+                double length = Double.parseDouble(temp.substring(2,temp.indexOf("<")).replace(',', '.'));
 
                 temp = desc.substring(desc.indexOf("Pendiente") + 20);
 //			double pendiente = Double.parseDouble(temp.substring(0,temp.indexOf("<")).replace(',', '.'));
@@ -528,7 +470,6 @@ public class MapActivity extends AppCompatActivity
                         nodosDestino.add(nodo.FID);
                     }
                 }
-
                 if(nodosOrigen.size() != 0 && nodosDestino.size() != 0) {
                     for(Integer nodo : nodosOrigen) {
                         for(Integer nodo2 : nodosDestino) {
@@ -539,11 +480,15 @@ public class MapActivity extends AppCompatActivity
                             arco.destino = nodo2;
                             adj.get(nodo).add(arco);
                             adj.get(nodo2).add(arco);
+                            arcos++;
                         }
                     }
 
                 }
+
             }
+            Log.d("NODOS","ARCOS "+arcos);
+
         }
 
     }
@@ -906,6 +851,7 @@ public class MapActivity extends AppCompatActivity
                 }
                 mapboxMap = mMap;
                 Log.d("AAAAAAA","SETUP");
+
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                                                     @Override
                                                     public void onMapClick(@NonNull LatLng point) {
@@ -917,7 +863,7 @@ public class MapActivity extends AppCompatActivity
                                                             originCoord = null;
                                                             destinationCoord = null;
                                                         } else if (originCoord == null) {
-                                                            originCoord = point;
+                                                             originCoord = point;
                                                             fromDirectionPoint=mapwizePlugin.getPlaceForId("5aba5b7585f18700132073eb");
                                                             Log.d("AAAAAAA","INICIO "+originCoord.getLatitude()+" "+originCoord.getLongitude());
                                                         } else if (destinationCoord == null) {
@@ -945,12 +891,13 @@ public class MapActivity extends AppCompatActivity
                 mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, opts);
                 mapwizePlugin.setPreferredLanguage(Locale.getDefault().getLanguage());
                 mapwizePlugin.setTopPadding((int)convertDpToPixel(TOP_PADDING,MapActivity.this));
-                mapwizePlugin.setFloor(-1.0);
+
                 initInterfaceComponents();
                 initMapwizePluginListeners();
-                mapwizePlugin.setFloor(7.0);
                 requestLocationPermission();
+
                 setupSearchEditTexts();
+
 
             }
         });
@@ -1291,7 +1238,7 @@ public class MapActivity extends AppCompatActivity
                     v = new Venue("5ab0172618b488002742baf6", "ML", "andes", "es", lang, "https://mapwizecdn2.azureedge.net/sdk/mapwize.js/images/venue-50.png",
                             new LatLngFloor(4.602767998132922, -74.06478032469751, 7.0), "com.mapbox.services.commons.geojson.Polygon@e5f4d34",
                /*var 9 ->*/ univs, trns, true, false, false, format.parse("Tue Mar 27 22:00:22 GMT-05:00 2018"));
-                } catch (ParseException e) {
+                } catch (java.text.ParseException e) {
                     Log.d("ERRORVENUE", e.getMessage());
                     e.printStackTrace();
                 }
@@ -2045,8 +1992,7 @@ public class MapActivity extends AppCompatActivity
     	for(int i = 0; i < nodos.size(); i++) {
     		BigDecimal dA = getDistance(nodos.get(i).coordenadas, from);
     		BigDecimal dB = getDistance(nodos.get(i).coordenadas, to);
-            Log.d("NODOS",nodos.get(i).coordenadas+" "+nodos.get(i).coordenadas);
-            Log.d("NODOS",dA+" "+dB);
+
     		if(dA.compareTo(dMinA) < 0) {
     			minA = i;
     			dMinA = dA;
