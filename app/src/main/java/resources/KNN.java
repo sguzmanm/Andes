@@ -64,7 +64,7 @@ public class KNN {
             case 1:
                 return x * x;
             case 2:
-                return Math.exp(x);
+                return Math.exp(Math.abs(x));
             default:
                 return x;
         }
