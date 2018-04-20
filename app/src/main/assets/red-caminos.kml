@@ -124,7 +124,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649517775,4.6031061241,0 -74.0649086909,4.6030731852,0</coordinates>
+          <coordinates> -74.06497453359131123832178440,4.603036033974430748026338470,0 -74.06492791699684561963491571,4.603006215645393900804116248,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -231,7 +231,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649086909,4.6030731852,0 -74.0648656286,4.6030393134,0</coordinates>
+          <coordinates> -74.06492791699684561963491571,4.603006215645393900804116248,0 -74.06488122701619016293480884,4.602975320621005274894852967,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -338,7 +338,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648656286,4.6030393134,0 -74.0648204830,4.6030081307</coordinates>
+          <coordinates> -74.06488122701619016293480884,4.602975320621005274894852967,0 -74.06483273145332381946599097,4.602947904547277646132830007,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -445,7 +445,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648204830,4.6030081307,0 -74.0647787446,4.6029738437,0</coordinates>
+          <coordinates> -74.06483273145332381946599097,4.602947904547277646132830007,0 -74.06478732431951305650360258,4.602916285465788748026338470,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -552,7 +552,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647787446,4.6029738437,0 -74.0647350450,4.6029409120,0</coordinates>
+          <coordinates> -74.06478732431951305650360258,4.602916285465788748026338470,0 -74.06474009438594861313648430,4.602886589690995005425414555,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -659,7 +659,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647350450,4.6029409120,0 -74.0646918236,4.6029081080,0</coordinates>
+          <coordinates> -74.06474009438594861313648430,4.602886589690995005425414555,0 -74.06469335684541750887716758,4.602856951437203363291619264,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -766,7 +766,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646918236,4.6029081080,0 -74.0646503063,4.6028754172,0</coordinates>
+          <coordinates> -74.06469335684541750887716758,4.602856951437203363291619264,0 -74.06464833837611739308615162,4.602827125595927612382355983,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -873,7 +873,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646503063,4.6028754172,0 -74.0646066679,4.6028418186,0</coordinates>
+          <coordinates> -74.06464833837611739308615162,4.602827125595927612382355983,0 -74.06460109983378155290102389,4.602796651999150948960595718,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -980,7 +980,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646066679,4.6028418186,0 -74.0645624902,4.6028087593,0</coordinates>
+          <coordinates> -74.06460109983378155290102389,4.602796651999150948960595718,0 -74.0645624902,4.6028087593,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1087,7 +1087,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649517775,4.6031061241,0 -74.0649792561,4.6030795542,0</coordinates>
+          <coordinates> -74.06497453359131123832178440,4.603036033974430748026338470,0 -74.06499927997486013311442066,4.603000375319760688674285517,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1194,7 +1194,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649792561,4.6030795542,0 -74.0649360104,4.6030476831,0</coordinates>
+          <coordinates> -74.06499927997486013311442066,4.603000375319760688674285517,0 -74.06495261582051886686834212,4.602971813761320825227531286,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1301,7 +1301,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649360104,4.6030476831,0 -74.0648930335,4.6030122114,0</coordinates>
+          <coordinates> -74.06495261582051886686834212,4.602971813761320825227531286,0 -74.06490584384490217533698762,4.602939064219597499810390595,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1408,7 +1408,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648656286,4.6030393134,0 -74.0648769533,4.6030279887,0</coordinates>
+          <coordinates> -74.06488122701619016293480884,4.602975320621005274894852967,0 -74.06489138648569095102044334,4.6029601943004080474669907260,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1515,7 +1515,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648769533,4.6030279887,0 -74.0648930335,4.6030122114,0</coordinates>
+          <coordinates> -74.06489138648569095102044334,4.6029601943004080474669907260,0 -74.06490584384490217533698762,4.602939064219597499810390595,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1622,7 +1622,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648930335,4.6030122114,0 -74.0648512222,4.6029807233,0</coordinates>
+          <coordinates> -74.06490584384490217533698762,4.602939064219597499810390595,0 -74.06486065686966092641431379,4.602910675224163937765022236,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1729,7 +1729,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648512222,4.6029807233,0 -74.0648076818,4.6029467238,0</coordinates>
+          <coordinates> -74.06486065686966092641431379,4.602910675224163937765022236,0 -74.06481347449597213060640535,4.602879722678773211388630331,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1836,7 +1836,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647787446,4.6029738437,0 -74.0648076818,4.6029467238,0</coordinates>
+          <coordinates> -74.06478732431951305650360258,4.602916285465788748026338470,0 -74.06481347449597213060640535,4.602879722678773211388630331,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -1943,7 +1943,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648076818,4.6029467238,0 -74.0647647175,4.6029124511,0</coordinates>
+          <coordinates> -74.06481347449597213060640535,4.602879722678773211388630331,0 -74.06476684068396371828351777,4.602848348705770522524735409,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2050,7 +2050,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647647175,4.6029124511,0 -74.0647206503,4.6028801899,0</coordinates>
+          <coordinates> -74.06476684068396371828351777,4.602848348705770522524735409,0 -74.06471931268962125939428414,4.602819492030081253055296997,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2157,7 +2157,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646918236,4.6029081080,0 -74.0647206503,4.6028801899,0</coordinates>
+          <coordinates> -74.06469335684541750887716758,4.602856951437203363291619264,0 -74.06471931268962125939428414,4.602819492030081253055296997,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2264,7 +2264,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647206503,4.6028801899,0 -74.0646776500,4.6028489822,0</coordinates>
+          <coordinates> -74.06471931268962125939428414,4.602819492030081253055296997,0 -74.06467296381360080230633985,4.602791647016502758118729962,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2371,7 +2371,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646776500,4.6028489822,0 -74.0646347962,4.6028155076,0</coordinates>
+          <coordinates> -74.06467296381360080230633985,4.602791647016502758118729962,0 -74.06462652433384771356913848,4.602761169663606642853449167,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2478,7 +2478,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646066679,4.6028418186,0 -74.0646347962,4.6028155076,0</coordinates>
+          <coordinates> -74.06460109983378155290102389,4.602796651999150948960595718,0 -74.06462652433384771356913848,4.602761169663606642853449167,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2585,7 +2585,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646347962,4.6028155076,0 -74.0645803315,4.6027757735,0</coordinates>
+          <coordinates> -74.06462652433384771356913848,4.602761169663606642853449167,0 -74.0645803315,4.6027757735,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2692,7 +2692,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649792561,4.6030795542,0 -74.0650074330,4.6030513773,0</coordinates>
+          <coordinates> -74.06499927997486013311442066,4.603000375319760688674285517,0 -74.06502455770254661775605888,4.602962739593512825193056848,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2799,7 +2799,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650074330,4.6030513773,0 -74.0650308662,4.6030255209,0</coordinates>
+          <coordinates> -74.06502455770254661775605888,4.602962739593512825193056848,0 -74.06504532599072454894508222,4.602928655363405866700279243,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -2906,7 +2906,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650308662,4.6030255209,0 -74.0649908569,4.6029937452,0</coordinates>
+          <coordinates> -74.06504532599072454894508222,4.602928655363405866700279243,0 -74.06500191425536133286792843,4.602899599831874132924811252,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3013,7 +3013,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649908569,4.6029937452,0 -74.0649489720,4.6029617250,0</coordinates>
+          <coordinates> -74.06500191425536133286792843,4.602899599831874132924811252,0 -74.06495659772528320155479712,4.602870613089702855147033475,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3120,7 +3120,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648930335,4.6030122114,0 -74.0649178274,4.6029862059,0</coordinates>
+          <coordinates> -74.06490584384490217533698762,4.602939064219597499810390595,0 -74.06492795975734324145895818,4.602904554805759126986589444,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3227,7 +3227,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649178274,4.6029862059,0 -74.0649489720,4.6029617250,0</coordinates>
+          <coordinates> -74.06492795975734324145895818,4.602904554805759126986589444,0 -74.06495659772528320155479712,4.602870613089702855147033475,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3334,7 +3334,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649489720,4.6029617250,0 -74.0649038129,4.6029260123,0</coordinates>
+          <coordinates> -74.06495659772528320155479712,4.602870613089702855147033475,0 -74.06490761428540218244734030,4.602837993614461538038232151,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3441,7 +3441,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649038129,4.6029260123,0 -74.0648580300,4.6028957698,0</coordinates>
+          <coordinates> -74.06490761428540218244734030,4.602837993614461538038232151,0 -74.06485857876962685231151101,4.602811776790328792584548557,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3548,7 +3548,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648076818,4.6029467238,0 -74.0648350498,4.6029193558,0</coordinates>
+          <coordinates> -74.06481347449597213060640535,4.602879722678773211388630331,0 -74.06483802654726570181335540,4.602843167403996578437963250,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3655,7 +3655,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648350498,4.6029193558,0 -74.0648580300,4.6028957698,0</coordinates>
+          <coordinates> -74.06483802654726570181335540,4.602843167403996578437963250,0 -74.06485857876962685231151101,4.602811776790328792584548557,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3762,7 +3762,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648580300,4.6028957698,0 -74.0648150900,4.6028605642,0</coordinates>
+          <coordinates> -74.06485857876962685231151101,4.602811776790328792584548557,0 -74.06481187157142860197538525,4.602779326121974325033612576,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3869,7 +3869,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648150900,4.6028605642,0 -74.0647735969,4.6028269405,0</coordinates>
+          <coordinates> -74.06481187157142860197538525,4.602779326121974325033612576,0 -74.06476677971593864817113111,4.602748423585346795437308236,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -3976,7 +3976,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647206503,4.6028801899,0 -74.0647469273,4.6028527014,0</coordinates>
+          <coordinates> -74.06471931268962125939428414,4.602819492030081253055296997,0 -74.06474275900878266681318302,4.602783001788545624258799600,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4083,7 +4083,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647469273,4.6028527014,0 -74.0647735969,4.6028269405,0</coordinates>
+          <coordinates> -74.06474275900878266681318302,4.602783001788545624258799600,0 -74.06476677971593864817113111,4.602748423585346795437308236,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4190,7 +4190,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647735969,4.6028269405,0 -74.0647315889,4.6027929231,0</coordinates>
+          <coordinates> -74.06476677971593864817113111,4.602748423585346795437308236,0 -74.06472113068999691406384666,4.602717164654348307507670562,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4297,7 +4297,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647315889,4.6027929231,0 -74.0646870193,4.6027614672,0</coordinates>
+          <coordinates> -74.06472113068999691406384666,4.602717164654348307507670562,0 -74.06467318368881095408004964,4.602689327153008716258144586,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4404,7 +4404,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646347962,4.6028155076,0 -74.0646647501,4.6027846451,0</coordinates>
+          <coordinates> -74.06462652433384771356913848,4.602761169663606642853449167,0 -74.06465330097419567263936291,4.602720116263819334535629331,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4511,7 +4511,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646647501,4.6027846451,0 -74.0646870193,4.6027614672,0</coordinates>
+          <coordinates> -74.06465330097419567263936291,4.602720116263819334535629331,0 -74.06467318368881095408004964,4.602689327153008716258144586,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4618,7 +4618,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646870193,4.6027614672,0 -74.0646434303,4.6027293337,0</coordinates>
+          <coordinates> -74.06467318368881095408004964,4.602689327153008716258144586,0 -74.0646434303,4.6027293337,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4725,7 +4725,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650308662,4.6030255209,0 -74.0650834091,4.6029760069,0</coordinates>
+          <coordinates> -74.06504532599072454894508222,4.602928655363405866700279243,0 -74.06509277989225187743475713,4.602861954977200076141103871,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4832,7 +4832,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650834091,4.6029760069,0 -74.0651120759,4.6029458257,0</coordinates>
+          <coordinates> -74.06509277989225187743475713,4.602861954977200076141103871,0 -74.06511833846317358396249181,4.602821924507881897886716999,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -4939,7 +4939,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0651120759,4.6029458257,0 -74.0650690262,4.6029131529,0</coordinates>
+          <coordinates> -74.06511833846317358396249181,4.602821924507881897886716999,0 -74.06507178664612640647085186,4.602792405052213908530699486,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5046,7 +5046,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650690262,4.6029131529,0 -74.0650257436,4.6028810157,0</coordinates>
+          <coordinates> -74.06507178664612640647085186,4.602792405052213908530699486,0 -74.06502505771436669902954459,4.602763544620405187217740545,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5153,7 +5153,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649489720,4.6029617250,0 -74.0649972359,4.6029101292,0</coordinates>
+          <coordinates> -74.06495659772528320155479712,4.602870613089702855147033475,0 -74.06499954670332064006101975,4.602802318319126381696659427,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5260,7 +5260,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649972359,4.6029101292,0 -74.0650257436,4.6028810157,0</coordinates>
+          <coordinates> -74.06499954670332064006101975,4.602802318319126381696659427,0 -74.06502505771436669902954459,4.602763544620405187217740545,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5367,7 +5367,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650257436,4.6028810157,0 -74.0649832943,4.6028471367,0</coordinates>
+          <coordinates> -74.06502505771436669902954459,4.602763544620405187217740545,0 -74.06497898107281006700968732,4.602732527041773456687178957,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5474,7 +5474,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649832943,4.6028471367,0 -74.0649391778,4.6028134105,0</coordinates>
+          <coordinates> -74.06497898107281006700968732,4.602732527041773456687178957,0 -74.06493125013744088771675802,4.602701995923994692798290068,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5581,7 +5581,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648580300,4.6028957698,0 -74.0649098612,4.6028433329,0</coordinates>
+          <coordinates> -74.06485857876962685231151101,4.602811776790328792584548557,0 -74.06490501345000191531354501,4.602741850074187117807770538,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5688,7 +5688,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649098612,4.6028433329,0 -74.0649391778,4.6028134105,0</coordinates>
+          <coordinates> -74.06490501345000191531354501,4.602741850074187117807770538,0 -74.06493125013744088771675802,4.602701995923994692798290068,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5795,7 +5795,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649391778,4.6028134105,0 -74.0648997203,4.6027822945,0</coordinates>
+          <coordinates> -74.06493125013744088771675802,4.602701995923994692798290068,0 -74.06488846034994789313786327,4.602673595660202775222360120,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -5902,7 +5902,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648997203,4.6027822945,0 -74.0648531394,4.6027473980,0</coordinates>
+          <coordinates> -74.06488846034994789313786327,4.602673595660202775222360120,0 -74.06483813789457513591546868,4.602642179190675793265418692,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6009,7 +6009,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647735969,4.6028269405,0 -74.0648235163,4.6027773239,0</coordinates>
+          <coordinates> -74.06476677971593864817113111,4.602748423585346795437308236,0 -74.06481159453758675117213086,4.602682094617989770585548316,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6116,7 +6116,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648235163,4.6027773239,0 -74.0648531394,4.6027473980,0</coordinates>
+          <coordinates> -74.06481159453758675117213086,4.602682094617989770585548316,0 -74.06483813789457513591546868,4.602642179190675793265418692,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6223,7 +6223,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648531394,4.6027473980,0 -74.0648101140,4.6027137922,0</coordinates>
+          <coordinates> -74.06483813789457513591546868,4.602642179190675793265418692,0 -74.06479151269133812041059055,4.602611583039656025222360120,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6330,7 +6330,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648101140,4.6027137922,0 -74.0647668314,4.6026816551,0</coordinates>
+          <coordinates> -74.06479151269133812041059055,4.602611583039656025222360120,0 -74.06474478375957841296928328,4.602582722607847303909401179,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6437,7 +6437,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0646870193,4.6027614672,0 -74.0647367302,4.6027114534,0</coordinates>
+          <coordinates> -74.06467318368881095408004964,4.602689327153008716258144586,0 -74.06471774800955668911814390,4.602622580514159180762402179,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6544,7 +6544,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647367302,4.6027114534,0 -74.0647668314,4.6026816551,0</coordinates>
+          <coordinates> -74.06471774800955668911814390,4.602622580514159180762402179,0 -74.06474478375957841296928328,4.602582722607847303909401179,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6651,7 +6651,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0651120759,4.6029458257,0 -74.0651396893,4.6029191210,0</coordinates>
+          <coordinates> -74.06511833846317358396249181,4.602821924507881897886716999,0 -74.06514320579278796432757610,4.602786085777966633446237115,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6758,7 +6758,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0651396893,4.6029191210,0 -74.0650976938,4.6028863026,0</coordinates>
+          <coordinates> -74.06514320579278796432757610,4.602786085777966633446237115,0 -74.06509769493045450942875858,4.602756202415688782069845210,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6865,7 +6865,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650976938,4.6028863026,0 -74.0650521922,4.6028536585,0</coordinates>
+          <coordinates> -74.06509769493045450942875858,4.602756202415688782069845210,0 -74.06504868975701203321612025,4.602727173176993211199020926,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -6972,7 +6972,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650257436,4.6028810157,0 -74.0650521922,4.6028536585,0</coordinates>
+          <coordinates> -74.06502505771436669902954459,4.602763544620405187217740545,0 -74.06504868975701203321612025,4.602727173176993211199020926,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7079,7 +7079,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650521922,4.6028536585,0 -74.0650091299,4.6028197867,0</coordinates>
+          <coordinates> -74.06504868975701203321612025,4.602727173176993211199020926,0 -74.06500199977635657651601338,4.602696278152604585289757645,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7186,7 +7186,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0650091299,4.6028197867,0 -74.0649678822,4.6027868263,0</coordinates>
+          <coordinates> -74.06500199977635657651601338,4.602696278152604585289757645,0 -74.06495722319918743186989347,4.602666092160838424203640501,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7293,7 +7293,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649391778,4.6028134105,0 -74.0649678822,4.6027868263,0</coordinates>
+          <coordinates> -74.06493125013744088771675802,4.602701995923994692798290068,0 -74.06495722319918743186989347,4.602666092160838424203640501,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7400,7 +7400,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0649678822,4.6027868263,0 -74.0649803834,4.6027740222,0 -74.0648935236,4.6027076195,0 -74.0648803115,4.6027208317,0</coordinates>
+          <coordinates> -74.06495722319918743186989347,4.602666092160838424203640501,0 -74.06496809973630973,4.60264910756678704,0 -74.06487449510041064,4.60258923331246604,0 -74.06486257760857461836798014,4.602606581813127286224014893,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7507,7 +7507,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648531394,4.6027473980,0 -74.0648803115,4.6027208317,0</coordinates>
+          <coordinates> -74.06483813789457513591546868,4.602642179190675793265418692,0 -74.06486257760857461836798014,4.602606581813127286224014893,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7614,7 +7614,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648803115,4.6027208317,0 -74.0648367225,4.6026886981,0</coordinates>
+          <coordinates> -74.06486257760857461836798014,4.602606581813127286224014893,0 -74.06481554200726549858654807,4.602577782658440117221705106,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7721,7 +7721,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0648367225,4.6026886981,0 -74.0647933663,4.6026560289,0</coordinates>
+          <coordinates> -74.06481554200726549858654807,4.602577782658440117221705106,0 -74.06476868352066890875478333,4.602548324479893680176336746,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
@@ -7828,7 +7828,7 @@
         <LineString>
           <extrude>0</extrude>
           <tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
-          <coordinates> -74.0647668314,4.6026816551,0 -74.0647933663,4.6026560289,0</coordinates>
+          <coordinates> -74.06474478375957841296928328,4.602582722607847303909401179,0 -74.06476868352066890875478333,4.602548324479893680176336746,0</coordinates>
         </LineString>
       </MultiGeometry>
     </Placemark>
