@@ -137,7 +137,7 @@ public class MapActivity extends AppCompatActivity
     private final int BOTTOM_PADDING = 54;
     private final int TOP_PADDING_DIRECTION = 80;
 
-    private final int NUM_NODOS = 56;
+    private final int NUM_NODOS = 55;
 
     private MapboxMap mapboxMap;
     private MapView mapView;
