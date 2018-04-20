@@ -2,10 +2,11 @@ package resources;
 
 import java.util.Map;
 
-class PuntoRef implements Comparable<PuntoRef> {
-    Map<String, Double> senales;
-    long[] coordenadas;
-    double diferencia;
+public class PuntoRef implements Comparable<PuntoRef> {
+    public Map<String, Double> senales;
+    public long[] coordenadas;
+    public double diferencia;
+    public int conteo;
 
     public int compareTo(PuntoRef o) {
         return Double.compare(diferencia, o.diferencia);
