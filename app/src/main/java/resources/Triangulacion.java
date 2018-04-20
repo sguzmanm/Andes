@@ -1,6 +1,10 @@
 package resources;
 
+import java.math.BigDecimal;
+
 public class Triangulacion {
+
+    private static final BigDecimal SUP_IZQ=new BigDecimal(4.60324129935718);
 
     public String resultadosAlgoritmo(double h1, double k1,double r1, double h2, double k2, double r2)
     {
