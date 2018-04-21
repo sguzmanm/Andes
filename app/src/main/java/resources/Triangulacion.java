@@ -1,11 +1,101 @@
 package resources;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Triangulacion {
 
-    private static final BigDecimal SUP_IZQ=new BigDecimal(4.60324129935718);
+    /**
+     *
+     SUP_IZQ = (Decimal('4.60324129935718'), Decimal('-74.06490464017361'))
+     SUP_DER = (Decimal('4.602864946901448'), Decimal('-74.06431626817653'))
+     INF_IZQ = (Decimal('4.602660916841884'), Decimal('-74.06529444934267'))
+     HEIGHT = 3223
+     WIDTH = 3168
+     */
+    private static final BigDecimal SUP_IZQ_LAT=new BigDecimal(4.60324129935718);
+    private static final BigDecimal SUP_IZQ_LON=new BigDecimal(-74.06490464017361);
+    private static final BigDecimal SUP_DER_LAT=new BigDecimal(4.602864946901448);
+    private static final BigDecimal SUP_DER_LON=new BigDecimal(-74.06431626817653);
+    private static final BigDecimal INF_IZQ_LAT=new BigDecimal(4.602660916841884);
+    private static final BigDecimal INF_IZQ_LON=new BigDecimal(-74.06529444934267);
+    private static final BigDecimal WIDTH=new BigDecimal(3223);
+    private static final BigDecimal HEIGHT=new BigDecimal(3168);
 
+
+    /**
+     * def vectorDiference(a, b):
+     difference = [0,0]
+     difference[0] = a[0] - b[0]
+     difference[1] = a[1] - b[1]
+     return difference
+     */
+    static BigDecimal[] vectorDiference(BigDecimal[]a,BigDecimal[]b)
+    {
+        BigDecimal[] difference=new BigDecimal[]{a[0].subtract(b[0]),a[1].subtract(b[1])};
+        return difference;
+    }
+    /*
+
+     def vectorSum(a, b):
+     _sum = [0,0]
+     _sum[0] = a[0] + b[0]
+     _sum[1] = a[0] + b[0]
+     return _sum
+     */
+
+    BigDecimal[] vectorSum(BigDecimal[]a,BigDecimal[]b)
+    {
+        BigDecimal[] sum=new BigDecimal[]{a[0].add(b[0]),a[1].add(b[1])};
+        return sum;
+    }
+    /*
+     αβ = vectorDiference(SUP_DER, SUP_IZQ)
+     θσ = vectorDiference(INF_IZQ, SUP_IZQ)
+
+*/
+    static BigDecimal[]alphaBeta=vectorDiference(new BigDecimal[]{SUP_DER_LAT,SUP_DER_LON},new BigDecimal[]{SUP_IZQ_LAT,SUP_IZQ_LON});
+    static BigDecimal[]thetaSigma=vectorDiference(new BigDecimal[]{INF_IZQ_LAT,INF_IZQ_LON},new BigDecimal[]{SUP_IZQ_LAT,SUP_IZQ_LON});
+
+    /*
+     def transform(x, y):
+     latLong = [0,0]
+     latLong[0] = (αβ[0]*x/WIDTH + θσ[0]*y/HEIGHT) + SUP_IZQ[0]
+     latLong[1] = (αβ[1]*x/WIDTH + θσ[1]*y/HEIGHT) + SUP_IZQ[1]
+
+     return tuple(latLong)
+     */
+    public static BigDecimal[] transform(long x, long y)
+    {
+        return new BigDecimal[]{
+                SUP_IZQ_LAT.add(alphaBeta[0].multiply(new BigDecimal(x)).divide(WIDTH,14, RoundingMode.HALF_UP).add(thetaSigma[0].multiply(new BigDecimal(y)).divide(HEIGHT,14, RoundingMode.HALF_UP))),
+                SUP_IZQ_LON.add(alphaBeta[1].multiply(new BigDecimal(x)).divide(WIDTH,14, RoundingMode.HALF_UP).add(thetaSigma[1].multiply(new BigDecimal(y)).divide(HEIGHT,14, RoundingMode.HALF_UP)))
+        };
+    }
+    /*
+
+     def tranformInput():
+     correctInput = []
+     fid = 940
+     for _input in INPUT:
+     obj = {}
+     latLong = transform(_input[0], _input[1])
+     obj['lat'] = str(latLong[0])
+     obj['long'] = str(latLong[1])
+     obj['x'] = str(_input[0])
+     obj['y'] = str(_input[1])
+     obj['floor'] = 7
+     obj['area'] = -1
+     obj['bloque'] = 'ML'
+     obj['FID'] = fid
+     fid = fid + 1
+     correctInput.append(obj)
+
+     with open('nodos corregidos.json', mode='w') as file:
+     file.write(json.dumps(correctInput))
+
+     tranformInput()
+     */
     public String resultadosAlgoritmo(double h1, double k1,double r1, double h2, double k2, double r2)
     {
         double A=0;

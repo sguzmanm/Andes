@@ -28,7 +28,7 @@ public class KNN {
     public int[] ubicacion(Map<String, Double> senales, int k) {
         Log.d("KNN","Llega");
             for (int i = 0; i < nodosRef.length; i++)
-            nodosRef[i].diferencia = diferencia(senales, nodosRef[i].senales, 3);
+            nodosRef[i].diferencia = diferencia(senales, nodosRef[i].senales, 2);
 
         Arrays.sort(nodosRef);
 

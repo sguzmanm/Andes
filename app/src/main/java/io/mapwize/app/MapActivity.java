@@ -124,6 +124,7 @@ import resources.Nodo;
 import resources.NodoCola;
 import resources.PixelLocation;
 import resources.PuntoRef;
+import resources.Triangulacion;
 
 import static com.mikepenz.materialize.util.UIUtils.convertDpToPixel;
 
@@ -292,9 +293,12 @@ public class MapActivity extends AppCompatActivity
             {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        int[] loc=knn.ubicacion(newId,3);
-                        Log.d("KNN",loc[0]+" "+loc[1]);
-                        Toast.makeText(getApplicationContext(), loc[0]+" "+loc[1], Toast.LENGTH_LONG).show();
+                        int[] loc=knn.ubicacion(newId,newId.size()/3+1);
+                        BigDecimal[] bd= Triangulacion.transform(loc[0],loc[1]);
+                        Log.d("KNN","SSS"+bd[0].doubleValue()+" "+bd[1].doubleValue());
+                        mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",bd[0].doubleValue(),bd[1].doubleValue(),7.0,System.currentTimeMillis()));
+                        Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+                        mapwizeLocationProvider.setAccessPointsRunning(true);
                     }
                 });
             }
@@ -533,7 +537,7 @@ public class MapActivity extends AppCompatActivity
             return;
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 10000);
+        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 2000);
     }
 
     public void stop() {
