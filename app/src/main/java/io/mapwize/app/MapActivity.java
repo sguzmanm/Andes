@@ -291,16 +291,13 @@ public class MapActivity extends AppCompatActivity
             }
             if(knn!=null)
             {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        int[] loc=knn.ubicacion(newId,newId.size()/3+1);
-                        BigDecimal[] bd= Triangulacion.transform(loc[0],loc[1]);
-                        Log.d("KNN","SSS"+bd[0].doubleValue()+" "+bd[1].doubleValue());
-                        mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",bd[0].doubleValue(),bd[1].doubleValue(),7.0,System.currentTimeMillis()));
-                        Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
-                        mapwizeLocationProvider.setAccessPointsRunning(true);
-                    }
-                });
+                int[] loc=knn.ubicacion(newId,newId.size()/3+1);
+                BigDecimal[] bd= Triangulacion.transform(loc[0],loc[1]);
+                Log.d("KNN","SSS"+bd[0].toString()+" "+bd[1].toString());
+                Log.d("KNN","SSS"+bd[0].doubleValue()+" "+bd[1].doubleValue());
+                mapwizeLocationProvider.defineLocation(new IndoorLocation("Custom",bd[0].doubleValue(),bd[1].doubleValue(),7.0,System.currentTimeMillis()));
+                Log.d("TAGTAG",mapwizePlugin.getUserPosition().getLatitude()+" "+mapwizePlugin.getUserPosition().getLongitude()+"");
+                mapwizeLocationProvider.setAccessPointsRunning(true);
             }
 
 
@@ -537,7 +534,7 @@ public class MapActivity extends AppCompatActivity
             return;
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 2000);
+        timer.scheduleAtFixedRate(timeTAGTAGsk, 0, 5000);
     }
 
     public void stop() {
