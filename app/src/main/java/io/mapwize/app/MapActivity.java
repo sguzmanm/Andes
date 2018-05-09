@@ -360,6 +360,7 @@ public class MapActivity extends AppCompatActivity
 
                         if(Double.isNaN(d[0])||Double.isNaN(d[1]))
                         {
+
                             Log.d("TAGTAG","Es ilocalizable");
                             mapwizeLocationProvider.setAccessPointsRunning(false);
                         }
